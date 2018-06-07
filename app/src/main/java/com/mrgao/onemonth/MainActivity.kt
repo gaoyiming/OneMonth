@@ -1,16 +1,18 @@
 package com.mrgao.onemonth
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.design.widget.Snackbar
+import android.support.v4.app.Fragment
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import com.mrgao.onemonth.base.BaseDatabindingFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
-import org.jetbrains.anko.startActivity
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -20,7 +22,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setSupportActionBar(toolbar)
 
         fab.setOnClickListener { view ->
-            startActivity<SettingsActivity>()
+
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show()
         }
@@ -33,6 +35,38 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         nav_view.setNavigationItemSelectedListener(this)
     }
 
+    fun showFragment(Tag: String) {
+        val supportFragmentManager = supportFragmentManager
+        @SuppressLint("RestrictedApi")
+        val fragments = supportFragmentManager.fragments
+
+
+        val fragmentTransaction = this.supportFragmentManager.beginTransaction()
+        var fragmentByTag: Fragment? = this.supportFragmentManager.findFragmentByTag(Tag)
+        if (fragments != null && fragments.size > 0) {
+            for (fragment in fragments) {
+                if (fragment != null) {
+                    fragmentTransaction.hide(fragment)
+                }
+            }
+        }
+        if (fragmentByTag == null) {
+            fragmentByTag = fragmentBuilder(Tag)
+            fragmentTransaction.add(R.id.container, fragmentByTag, Tag)
+            fragmentTransaction.commitAllowingStateLoss()
+            return
+        }
+        fragmentTransaction.show(fragmentByTag)
+        fragmentTransaction.commitAllowingStateLoss()
+    }
+
+    private fun fragmentBuilder(fragmentTag: String): BaseDatabindingFragment<*>? {
+        var databindingFragment: BaseDatabindingFragment<*>? = null
+        when (fragmentTag) {
+
+        }
+        return databindingFragment
+    }
     override fun onBackPressed() {
         if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
             drawer_layout.closeDrawer(GravityCompat.START)
