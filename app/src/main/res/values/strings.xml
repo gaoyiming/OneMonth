@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">OneMonth</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+    <string name="today_task">今日任务</string>
+    <string name="future_task">未来任务</string>
+    <string name="delay_task">任务延迟</string>
+    <string name="setting">设置</string>
+    <string name="share">分享</string>
+    <string name="about">关于</string>
+    <string name="custom">定制</string>
+</resources>
