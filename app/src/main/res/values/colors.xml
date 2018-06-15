@@ -4,6 +4,8 @@
     <color name="colorPrimaryDark">@color/main_color</color>
     <color name="colorAccent">@color/main_color</color>
     <color name="main_color">#ea789f</color>
+    <color name="red">#ff0000</color>
     <color name="main_color_tiny">#f596b7</color>
     <color name="main_color_weak">#f4bbcf</color>
+    <color name="white">#ffffff</color>
 </resources>

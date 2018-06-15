@@ -13,4 +13,11 @@
     <string name="share">分享</string>
     <string name="about">关于</string>
     <string name="custom">定制</string>
+
+    <!-- TODO: Remove or change this placeholderk text -->
+    <string name="hello_blank_fragment">Hello blankkkkkkkkkkk fragment</string>
+    <string name="addclassify">添加分类</string>
+    <string name="addClassify">添加一个分类</string>
+    <string name="add_task">添加一个任务</string>
+    <string name="noclassify">没有你要的分类？试着点击我添加一下吧</string>
 </resources>

@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.databinding.DataBindingUtil;
-import android.databinding.ViewDataBinding;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,17 +13,19 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
+
+
 /**
  *
  */
 
 
-public abstract class BaseDatabindingFragment<B extends ViewDataBinding> extends Fragment {
+public abstract class BaseMvpFragment<T extends BasePresenter, E extends BaseModel> extends Fragment {
     private String TAG;
     private OnBackToFirstListener _mBackToFirstListener;
-    protected B mBinding;
-    //    protected T mPresenter;
-//    private E mModel;
+
+    protected T mPresenter;
+    private E mModel;
     private Context mContext;
     private Activity mActivity;
     private View view;
@@ -43,10 +43,17 @@ public abstract class BaseDatabindingFragment<B extends ViewDataBinding> extends
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mBinding = DataBindingUtil.inflate(
-                inflater, getLayoutId(), container, false);
-        return mBinding.getRoot();
 
+        if (view != null) {
+            ViewGroup parent = (ViewGroup) view.getParent();
+            if (parent != null) {
+                parent.removeView(view);
+            }
+            return view;
+        }
+
+
+        return inflater.inflate(getLayoutId(), container, false);
 
     }
 
@@ -55,13 +62,13 @@ public abstract class BaseDatabindingFragment<B extends ViewDataBinding> extends
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         //设置状态栏透明
-        // setStatusBarColor();
+       // setStatusBarColor();
         mActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-//        TAG = getClass().getSimpleName();
-//        mPresenter = TUtil.getT(this, 0);
-//        mModel = TUtil.getT(this, 1);
+        TAG = getClass().getSimpleName();
+        mPresenter = TUtil.getT(this, 0);
+        mModel = TUtil.getT(this, 1);
 
-        // if (this instanceof BaseView) mPresenter.attachVM(this, mModel);
+        if (this instanceof BaseView) mPresenter.attachVM(this, mModel);
         getBundle(getArguments());
 
         super.onViewCreated(view, savedInstanceState);
@@ -84,7 +91,7 @@ public abstract class BaseDatabindingFragment<B extends ViewDataBinding> extends
     @Override
     public void onDestroy() {
         super.onDestroy();
-        // if (mPresenter != null) mPresenter.detachVM();
+       // if (mPresenter != null) mPresenter.detachVM();
     }
 
 //    @Override
@@ -95,6 +102,11 @@ public abstract class BaseDatabindingFragment<B extends ViewDataBinding> extends
 //        return fragmentAnimator;
 //    }
 
+    protected abstract View initContentView(LayoutInflater inflater, ViewGroup container);
+
+    public View getLayoutView() {
+        return null;
+    }
 
     /**
      * 得到Activity传进来的值
@@ -166,7 +178,7 @@ public abstract class BaseDatabindingFragment<B extends ViewDataBinding> extends
 
     public void jumpTo(Class activity, Bundle bundle) {
         Intent intent = new Intent(getContext(), activity);
-        intent.putExtra("bundle", bundle);
+        intent.putExtra("bundle",bundle);
         startActivity(intent);
 
 //       getActivity().overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);

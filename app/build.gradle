@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
-
 apply plugin: 'kotlin-android'
-
+apply plugin: 'org.greenrobot.greendao'
+apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion 27
     defaultConfig {
-        applicationId "com.mrgao.onemonth"
+        applicationId "onemonth.mrgao.com.onemonth"
         minSdkVersion 23
         targetSdkVersion 27
         versionCode 1
@@ -20,17 +20,62 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    dataBinding {
+        //  abortOnError fals
+        enabled = true
+    }
 }
-
+greendao {
+    //数据库的schema版本，也可以理解为数据库版本号
+    schemaVersion 1
+    //设置DaoMaster、DaoSession、Dao包名，也就是要放置这些类的包的全路径。
+    daoPackage 'com.onemonth.dao'
+    //设置DaoMaster、DaoSession、Dao目录
+    targetGenDir 'src/main/java'
+}
+repositories {
+    maven { url "https://jitpack.io" }
+}
+kapt {
+    generateStubs = true
+}
 dependencies {
+    //    <dependency>
+    //    <groupId>com.azhon</groupId>
+    //  <artifactId>suspension-fab</artifactId>
+    //    <version>1.1.0</version>
+    //</dependency>
+    implementation 'com.moxun:tagcloudlib:1.2.0'
+    implementation 'com.android.support:cardview-v7:27.1.1'
+    implementation 'com.github.sd6352051:NiftyDialogEffects:v1.0.3'
+    implementation 'com.azhon:suspension-fab:1.1.0'
+    implementation 'com.orhanobut:dialogplus:1.11@aar'
+    implementation 'com.yarolegovich:lovely-dialog:1.1.0'
+    kapt "com.android.databinding:compiler:3.1.2"
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.android.support:appcompat-v7:27.1.1'
-    implementation 'com.android.support:support-v4:27.1.1'
-    implementation 'com.android.support:design:27.1.1'
     implementation 'com.android.support.constraint:constraint-layout:1.1.0'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-    implementation project(':base')
+    implementation 'com.android.support:design:27.1.1'
+    implementation 'com.android.support:support-v4:27.1.1'
+    implementation 'org.greenrobot:greendao:3.2.2'
+    implementation "org.jetbrains.anko:anko:$anko_version"
+    // add library
+    implementation 'com.android.support:multidex:1.0.3'
+    implementation 'org.greenrobot:greendao-generator:3.2.2'
+    implementation 'io.reactivex.rxjava2:rxkotlin:2.2.0'
+}
+configurations.all {
+    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+        def requested = details.requested
+        if (requested.group == 'com.android.support') {
+            if (!requested.name.startsWith("multidex")) {
+                details.useVersion '27.1.1'
+            }
+        }
+    }
 }

@@ -7,7 +7,7 @@ import android.support.annotation.Nullable;
  * Created by mr.gao on 2017/3/29.
  */
 
-public abstract class BaseLazyFragment<T extends BasePresenter, E extends BaseModel> extends BaseFragment<T, E> {
+public abstract class BaseLazyMvpFragment<T extends BasePresenter, E extends BaseModel> extends BaseMvpFragment<T, E> {
     private boolean mInited = false;
     private Bundle mSavedInstanceState;
 
