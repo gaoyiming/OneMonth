@@ -22,4 +22,8 @@
     <string name="noclassify">没有你要的分类？试着点击我添加一下吧</string>
     <string name="finish">已完成</string>
     <string name="unfinish">未完成</string>
+    <string name="time_circle">时间周期：</string>
+    <string name="to">至</string>
+    <string name="task_days">任务总天数：</string>
+    <string name="finish_days">   ，打卡天数：</string>
 </resources>

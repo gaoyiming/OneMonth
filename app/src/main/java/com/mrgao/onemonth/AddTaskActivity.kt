@@ -9,12 +9,14 @@ import android.view.KeyEvent
 import com.mrgao.onemonth.adapter.TextTagsAdapter
 import com.mrgao.onemonth.bean.Classify
 import com.mrgao.onemonth.bean.Task
+import com.mrgao.onemonth.bean.TaskGroup
 import com.mrgao.onemonth.model.DButil
 import com.mrgao.onemonth.rx.RxBus
 import com.mrgao.onemonth.view.flowlayout.FlowTagLayout
 import com.mrgao.onemonth.view.flowlayout.TagAdapter
 import com.onemonth.dao.ClassifyDao
 import com.onemonth.dao.TaskDao
+import com.onemonth.dao.TaskGroupDao
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -28,6 +30,7 @@ import java.util.*
 class AddTaskActivity : AppCompatActivity() {
     private lateinit var classifyDao: ClassifyDao
     private lateinit var taskDao: TaskDao
+    private lateinit var taskGroupDao: TaskGroupDao
     private var text_classify: String = ""
     private lateinit var classifyLists: ArrayList<Classify>
     private var lists: ArrayList<String> = ArrayList()
@@ -46,7 +49,6 @@ class AddTaskActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContentView(R.layout.activity_add_task)
         val mYear = calender.get(Calendar.YEAR);
         val mMonth = calender.get(Calendar.MONTH);
@@ -119,6 +121,7 @@ class AddTaskActivity : AppCompatActivity() {
     private fun getClassify() {
         classifyDao = DButil.getDaosession().classifyDao
         taskDao = DButil.getDaosession().taskDao
+        taskGroupDao = DButil.getDaosession().taskGroupDao
         classifyLists = classifyDao.loadAll() as ArrayList<Classify>
         lists.clear()
         for (classify in classifyLists) {
@@ -205,7 +208,7 @@ class AddTaskActivity : AppCompatActivity() {
             else -> {
             }
         }
-
+        val currentTimeMillis = System.currentTimeMillis()
         Observable.fromIterable(0..circle).flatMap {
             var date = Date()
 
@@ -218,18 +221,37 @@ class AddTaskActivity : AppCompatActivity() {
             task.content = toString
             task.classify = text_classify
             task.data = dateFormat
-            task.createTime = System.currentTimeMillis()
+            task.createTime = currentTimeMillis
             insert = taskDao.insert(task)
+            if (it == circle) {
+                val taskGroup = TaskGroup()
+                var date = Date()
+                val format = SimpleDateFormat("yyyy-MM-dd")
+                val dateFormat = format.format(date)
+                taskGroup.createTimeS = dateFormat
+                calender.time = date
+                calender.add(Calendar.DATE, circle)
+                date = calender.time
+                taskGroup.content = toString
+                taskGroup.classify = text_classify
+                val dateFormatEnd = format.format(date)
+                taskGroup.endTimeS = dateFormatEnd
+                taskGroup.createTime = currentTimeMillis
+                taskGroup.dayNum = circle + 1
+                taskGroupDao.insert(taskGroup)
+            }
             Observable.just(dateNowStr)
 
         }.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
 
+
                     if (insert > 0) {
                         RxBus.instance.post("TODAYTASK_REFRESH")
                         finish()
                     }
+
                 })
 
 

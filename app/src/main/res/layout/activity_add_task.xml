@@ -1,24 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-        <TextView
-            android:id="@+id/addClassify"
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:layout_marginTop="16dp"
-            android:gravity="center"
-            android:text="@string/noclassify"
-            android:textColor="@color/main_color"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tagView" />
 
         <TextView
             android:id="@+id/classify"
@@ -65,9 +53,11 @@
             android:layout_height="217dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
+            android:layout_marginTop="248dp"
             app:autoScrollMode="uniform"
             app:layout_constraintDimensionRatio="w,4:3"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.489"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -87,13 +77,13 @@
             android:id="@+id/textView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="24dp"
+            android:layout_marginStart="36dp"
+            android:layout_marginTop="29dp"
             android:text="选择你的任务周期"
             android:textColor="@color/text_6"
             android:textSize="@dimen/text_big"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/addClassify" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/textView4"
@@ -117,6 +107,18 @@
             android:textSize="@dimen/text_big"
             app:layout_constraintStart_toEndOf="@+id/textView4"
             app:layout_constraintTop_toBottomOf="@+id/flowlayout" />
+
+        <TextView
+            android:id="@+id/addClassify"
+            android:layout_width="395dp"
+            android:layout_height="30dp"
+            android:gravity="center"
+            android:text="@string/noclassify"
+            android:textColor="@color/main_color"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tagView" />
 
     </android.support.constraint.ConstraintLayout>
 </layout>

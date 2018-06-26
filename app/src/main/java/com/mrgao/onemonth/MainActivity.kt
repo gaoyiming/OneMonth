@@ -66,7 +66,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         var databindingFragment: Fragment? = null
         when (fragmentTag) {
             "TODAY_TASK" -> databindingFragment = TodayTaskFragment()
-            "FINISHED_TASK" -> databindingFragment = FinishedTaskFragment()
+            "FINISHED_TASK" -> databindingFragment = TaskGroupFragment()
             "DELAY_TASK" -> databindingFragment = DelayTaskMvpFragment()
         }
         return databindingFragment
