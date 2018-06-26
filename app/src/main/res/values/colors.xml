@@ -8,4 +8,13 @@
     <color name="main_color_tiny">#f596b7</color>
     <color name="main_color_weak">#f4bbcf</color>
     <color name="white">#ffffff</color>
+    <color name="gray">#33000000</color>
+    <color name="text_6">#666666</color>
+
+
+    <color name="faceColor">@color/main_color</color>
+    <color name="eyesColor">#ffffff</color>
+    <color name="tongueColor">#c32925</color>
+    <color name="mouthColor">#ffffff</color>
+
 </resources>

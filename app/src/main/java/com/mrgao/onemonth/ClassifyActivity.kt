@@ -6,39 +6,13 @@ import android.support.v7.widget.LinearLayoutManager
 import com.mrgao.onemonth.base.BindingAdapter
 import com.mrgao.onemonth.bean.Classify
 import com.mrgao.onemonth.model.DButil
+import com.mrgao.onemonth.rx.RxBus
 import com.onemonth.dao.ClassifyDao
 
 import com.yarolegovich.lovelydialog.LovelyTextInputDialog
 import kotlinx.android.synthetic.main.activity_classify.*
 
 
-//dialogBuilder
-//.withTitle("Modal Dialog")                                  //.withTitle(null)  no title
-//.withTitleColor("#FFFFFF")                                  //def
-//.withDividerColor("#11000000")                              //def
-//.withMessage("This is a modal Dialog.")                     //.withMessage(null)  no Msg
-//.withMessageColor("#FFFFFFFF")                              //def  | withMessageColor(int resid)
-//.withDialogColor("#FFE74C3C")                               //def  | withDialogColor(int resid)
-//.withIcon(getResources().getDrawable(R.drawable.icon))
-//.withDuration(700)                                          //def
-//.withEffect(effect)                                         //def Effectstype.Slidetop
-//.withButton1Text("OK")                                      //def gone
-//.withButton2Text("Cancel")                                  //def gone
-//.isCancelableOnTouchOutside(true)                           //def    | isCancelable(true)
-//.setCustomView(R.layout.custom_view,v.getContext())         //.setCustomView(View or ResId,context)
-//.setButton1Click(new View.OnClickListener() {
-//    @Override
-//    public void onClick(View v) {
-//        Toast.makeText(v.getContext(), "i'm btn1", Toast.LENGTH_SHORT).show();
-//    }
-//})
-//.setButton2Click(new View.OnClickListener() {
-//    @Override
-//    public void onClick(View v) {
-//        Toast.makeText(v.getContext(),"i'm btn2",Toast.LENGTH_SHORT).show();
-//    }
-//})
-//.show();
 
 class ClassifyActivity : AppCompatActivity() {
     lateinit var classifyDao: ClassifyDao
@@ -70,6 +44,13 @@ class ClassifyActivity : AppCompatActivity() {
         }
         recyclerView.adapter = bindingAdapter
         getData()
+        RxBus.instance.register(String::class.java).subscribe({ s ->
+            run {
+                if ("CLASSIFY_REFRESH" == s) {
+                    getData()
+                }
+            }
+        })
     }
 
     private fun getData() {
@@ -85,6 +66,9 @@ class ClassifyActivity : AppCompatActivity() {
         val classify = Classify()
         classify.classify = classy
         val insert = classifyDao.insert(classify)
+        if (insert > 0) {
+            RxBus.instance.post("CLASSIFY_REFRESH")
+        }
 
     }
 }

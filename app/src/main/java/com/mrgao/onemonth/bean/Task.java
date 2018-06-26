@@ -2,6 +2,7 @@ package com.mrgao.onemonth.bean;
 
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.Id;
 
 
 /**
@@ -14,7 +15,8 @@ import org.greenrobot.greendao.annotation.Generated;
  */
 @Entity
 public class Task {
-
+    @Id(autoincrement = true)
+    private Long id;
     private long createTime;
     private long endTime;
     private long changeTime;
@@ -22,16 +24,19 @@ public class Task {
     private String  grade;
     private String  type;
     private String  repeat;
+    private String data;
 
     private String  title;
     private String  content;
     private String repeatType;
     private boolean isFinish;
     private boolean isDelay;
-    @Generated(hash = 896285853)
-    public Task(long createTime, long endTime, long changeTime, String classify,
-            String grade, String type, String repeat, String title, String content,
-            String repeatType, boolean isFinish, boolean isDelay) {
+
+    @Generated(hash = 589294772)
+    public Task(Long id, long createTime, long endTime, long changeTime, String classify,
+            String grade, String type, String repeat, String data, String title,
+            String content, String repeatType, boolean isFinish, boolean isDelay) {
+        this.id = id;
         this.createTime = createTime;
         this.endTime = endTime;
         this.changeTime = changeTime;
@@ -39,6 +44,7 @@ public class Task {
         this.grade = grade;
         this.type = type;
         this.repeat = repeat;
+        this.data = data;
         this.title = title;
         this.content = content;
         this.repeatType = repeatType;
@@ -119,6 +125,20 @@ public class Task {
     }
     public void setIsDelay(boolean isDelay) {
         this.isDelay = isDelay;
+    }
+
+    public Long getId() {
+        return this.id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+    public String getData() {
+        return this.data;
+    }
+    public void setData(String data) {
+        this.data = data;
     }
 
 

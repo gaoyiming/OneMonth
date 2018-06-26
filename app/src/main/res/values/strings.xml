@@ -20,4 +20,6 @@
     <string name="addClassify">添加一个分类</string>
     <string name="add_task">添加一个任务</string>
     <string name="noclassify">没有你要的分类？试着点击我添加一下吧</string>
+    <string name="finish">已完成</string>
+    <string name="unfinish">未完成</string>
 </resources>

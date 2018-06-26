@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:bind="http://schemas.android.com/tools">
 
     <data>
 
@@ -8,19 +8,27 @@
             type="com.mrgao.onemonth.bean.Task" />
     </data>
 
-    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <com.tubb.smrv.SwipeHorizontalMenuLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:sml="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/sml"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        sml:sml_auto_open_percent="0.2"
+        sml:sml_scroller_duration="750"
+        sml:sml_scroller_interpolator="@android:anim/bounce_interpolator">
 
-        <!--<TextView-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="@{task.classify}" />-->
+        <include
+            bind:task="@{task}"
+            android:id="@id/smContentView"
+            layout="@layout/item_task_content" />
 
-        <!--<TextView-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_margin="50dp"-->
-            <!--android:text="@{task.content}" />-->
-    </android.support.constraint.ConstraintLayout>
+        <include
+            android:id="@id/smMenuViewLeft"
+            layout="@layout/item_task_left" />
+
+        <include
+            android:id="@id/smMenuViewRight"
+            layout="@layout/item_task_reght" />
+
+    </com.tubb.smrv.SwipeHorizontalMenuLayout>
 </layout>

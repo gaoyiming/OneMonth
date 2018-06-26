@@ -63,10 +63,9 @@ public abstract class BaseDatabindingFragment<B extends ViewDataBinding> extends
 
         // if (this instanceof BaseView) mPresenter.attachVM(this, mModel);
         getBundle(getArguments());
-
         super.onViewCreated(view, savedInstanceState);
-        initdate();
         initUI(view, savedInstanceState);
+        initdate();
     }
 
     @Override

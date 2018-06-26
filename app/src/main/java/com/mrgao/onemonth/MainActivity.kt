@@ -20,12 +20,7 @@ import org.jetbrains.anko.startActivity
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
-//    override fun onFabClick(fab: FloatingActionButton?, tag: Any?) {
-//        when (tag) {
-//            "ADD_ClASSIFY" -> startActivity<ClassifyActivity>()
-//            "ADD_TASK" -> startActivity<AddTaskActivity>()
-//        }
-//    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,36 +35,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
         showFragment("TODAY_TASK")
-//        showFragment("FINISHED_TASK")
-//        showFragment("DELAY_TASK")
+
         nav_view.setNavigationItemSelectedListener(this)
-//        val fabTop = findViewById<SuspensionFab>(R.id.fab_top)
-////构建展开按钮属性
-//        val classify = FabAttributes.Builder()
-//                .setBackgroundTint(Color.parseColor("#2096F3"))
-//                .setSrc(resources.getDrawable(R.mipmap.classify))
-//                .setFabSize(FloatingActionButton.SIZE_MINI)
-//                .setPressedTranslationZ(10)
-//                .setTag("ADD_ClASSIFY")
-//                .build()
-//        val task = FabAttributes.Builder()
-//                .setBackgroundTint(Color.parseColor("#FF9800"))
-//                .setSrc(resources.getDrawable(R.mipmap.task))
-//                .setFabSize(FloatingActionButton.SIZE_MINI)
-//                .setPressedTranslationZ(10)
-//                .setTag("ADD_TASK")
-//                .build()
-//        val news = FabAttributes.Builder()
-//                .setBackgroundTint(Color.parseColor("#03A9F4"))
-//                .setSrc(resources.getDrawable(R.drawable.))
-//                .setFabSize(FloatingActionButton.SIZE_MINI)
-//                .setPressedTranslationZ(10)
-//                .setTag(3)
-//                .build()
-////添加菜单
-//        fabTop.addFab(task, classify)
-////设置菜单点击事件
-//        fabTop.setFabClickListener(this)
+
     }
 
     private fun showFragment(Tag: String) {

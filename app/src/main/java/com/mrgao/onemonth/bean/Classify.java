@@ -4,6 +4,7 @@ import com.moxun.tagcloudlib.view.TagsAdapter;
 
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.Id;
 
 /**
  * 文 件 名: Classify
@@ -15,10 +16,13 @@ import org.greenrobot.greendao.annotation.Generated;
  */
 @Entity
 public class Classify {
+    @Id(autoincrement = true)
+    private Long id;
     private String classify;
 
-    @Generated(hash = 1827475476)
-    public Classify(String classify) {
+    @Generated(hash = 1502225527)
+    public Classify(Long id, String classify) {
+        this.id = id;
         this.classify = classify;
     }
 
@@ -32,5 +36,13 @@ public class Classify {
 
     public void setClassify(String classify) {
         this.classify = classify;
+    }
+
+    public Long getId() {
+        return this.id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

@@ -15,7 +15,7 @@ import com.mrgao.onemonth.bean.Task;
 /** 
  * DAO for table "TASK".
 */
-public class TaskDao extends AbstractDao<Task, Void> {
+public class TaskDao extends AbstractDao<Task, Long> {
 
     public static final String TABLENAME = "TASK";
 
@@ -24,18 +24,20 @@ public class TaskDao extends AbstractDao<Task, Void> {
      * Can be used for QueryBuilder and for referencing column names.
      */
     public static class Properties {
-        public final static Property CreateTime = new Property(0, long.class, "createTime", false, "CREATE_TIME");
-        public final static Property EndTime = new Property(1, long.class, "endTime", false, "END_TIME");
-        public final static Property ChangeTime = new Property(2, long.class, "changeTime", false, "CHANGE_TIME");
-        public final static Property Classify = new Property(3, String.class, "classify", false, "CLASSIFY");
-        public final static Property Grade = new Property(4, String.class, "grade", false, "GRADE");
-        public final static Property Type = new Property(5, String.class, "type", false, "TYPE");
-        public final static Property Repeat = new Property(6, String.class, "repeat", false, "REPEAT");
-        public final static Property Title = new Property(7, String.class, "title", false, "TITLE");
-        public final static Property Content = new Property(8, String.class, "content", false, "CONTENT");
-        public final static Property RepeatType = new Property(9, String.class, "repeatType", false, "REPEAT_TYPE");
-        public final static Property IsFinish = new Property(10, boolean.class, "isFinish", false, "IS_FINISH");
-        public final static Property IsDelay = new Property(11, boolean.class, "isDelay", false, "IS_DELAY");
+        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
+        public final static Property CreateTime = new Property(1, long.class, "createTime", false, "CREATE_TIME");
+        public final static Property EndTime = new Property(2, long.class, "endTime", false, "END_TIME");
+        public final static Property ChangeTime = new Property(3, long.class, "changeTime", false, "CHANGE_TIME");
+        public final static Property Classify = new Property(4, String.class, "classify", false, "CLASSIFY");
+        public final static Property Grade = new Property(5, String.class, "grade", false, "GRADE");
+        public final static Property Type = new Property(6, String.class, "type", false, "TYPE");
+        public final static Property Repeat = new Property(7, String.class, "repeat", false, "REPEAT");
+        public final static Property Data = new Property(8, String.class, "data", false, "DATA");
+        public final static Property Title = new Property(9, String.class, "title", false, "TITLE");
+        public final static Property Content = new Property(10, String.class, "content", false, "CONTENT");
+        public final static Property RepeatType = new Property(11, String.class, "repeatType", false, "REPEAT_TYPE");
+        public final static Property IsFinish = new Property(12, boolean.class, "isFinish", false, "IS_FINISH");
+        public final static Property IsDelay = new Property(13, boolean.class, "isDelay", false, "IS_DELAY");
     }
 
 
@@ -51,18 +53,20 @@ public class TaskDao extends AbstractDao<Task, Void> {
     public static void createTable(Database db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"TASK\" (" + //
-                "\"CREATE_TIME\" INTEGER NOT NULL ," + // 0: createTime
-                "\"END_TIME\" INTEGER NOT NULL ," + // 1: endTime
-                "\"CHANGE_TIME\" INTEGER NOT NULL ," + // 2: changeTime
-                "\"CLASSIFY\" TEXT," + // 3: classify
-                "\"GRADE\" TEXT," + // 4: grade
-                "\"TYPE\" TEXT," + // 5: type
-                "\"REPEAT\" TEXT," + // 6: repeat
-                "\"TITLE\" TEXT," + // 7: title
-                "\"CONTENT\" TEXT," + // 8: content
-                "\"REPEAT_TYPE\" TEXT," + // 9: repeatType
-                "\"IS_FINISH\" INTEGER NOT NULL ," + // 10: isFinish
-                "\"IS_DELAY\" INTEGER NOT NULL );"); // 11: isDelay
+                "\"_id\" INTEGER PRIMARY KEY AUTOINCREMENT ," + // 0: id
+                "\"CREATE_TIME\" INTEGER NOT NULL ," + // 1: createTime
+                "\"END_TIME\" INTEGER NOT NULL ," + // 2: endTime
+                "\"CHANGE_TIME\" INTEGER NOT NULL ," + // 3: changeTime
+                "\"CLASSIFY\" TEXT," + // 4: classify
+                "\"GRADE\" TEXT," + // 5: grade
+                "\"TYPE\" TEXT," + // 6: type
+                "\"REPEAT\" TEXT," + // 7: repeat
+                "\"DATA\" TEXT," + // 8: data
+                "\"TITLE\" TEXT," + // 9: title
+                "\"CONTENT\" TEXT," + // 10: content
+                "\"REPEAT_TYPE\" TEXT," + // 11: repeatType
+                "\"IS_FINISH\" INTEGER NOT NULL ," + // 12: isFinish
+                "\"IS_DELAY\" INTEGER NOT NULL );"); // 13: isDelay
     }
 
     /** Drops the underlying database table. */
@@ -74,148 +78,175 @@ public class TaskDao extends AbstractDao<Task, Void> {
     @Override
     protected final void bindValues(DatabaseStatement stmt, Task entity) {
         stmt.clearBindings();
-        stmt.bindLong(1, entity.getCreateTime());
-        stmt.bindLong(2, entity.getEndTime());
-        stmt.bindLong(3, entity.getChangeTime());
+ 
+        Long id = entity.getId();
+        if (id != null) {
+            stmt.bindLong(1, id);
+        }
+        stmt.bindLong(2, entity.getCreateTime());
+        stmt.bindLong(3, entity.getEndTime());
+        stmt.bindLong(4, entity.getChangeTime());
  
         String classify = entity.getClassify();
         if (classify != null) {
-            stmt.bindString(4, classify);
+            stmt.bindString(5, classify);
         }
  
         String grade = entity.getGrade();
         if (grade != null) {
-            stmt.bindString(5, grade);
+            stmt.bindString(6, grade);
         }
  
         String type = entity.getType();
         if (type != null) {
-            stmt.bindString(6, type);
+            stmt.bindString(7, type);
         }
  
         String repeat = entity.getRepeat();
         if (repeat != null) {
-            stmt.bindString(7, repeat);
+            stmt.bindString(8, repeat);
+        }
+ 
+        String data = entity.getData();
+        if (data != null) {
+            stmt.bindString(9, data);
         }
  
         String title = entity.getTitle();
         if (title != null) {
-            stmt.bindString(8, title);
+            stmt.bindString(10, title);
         }
  
         String content = entity.getContent();
         if (content != null) {
-            stmt.bindString(9, content);
+            stmt.bindString(11, content);
         }
  
         String repeatType = entity.getRepeatType();
         if (repeatType != null) {
-            stmt.bindString(10, repeatType);
+            stmt.bindString(12, repeatType);
         }
-        stmt.bindLong(11, entity.getIsFinish() ? 1L: 0L);
-        stmt.bindLong(12, entity.getIsDelay() ? 1L: 0L);
+        stmt.bindLong(13, entity.getIsFinish() ? 1L: 0L);
+        stmt.bindLong(14, entity.getIsDelay() ? 1L: 0L);
     }
 
     @Override
     protected final void bindValues(SQLiteStatement stmt, Task entity) {
         stmt.clearBindings();
-        stmt.bindLong(1, entity.getCreateTime());
-        stmt.bindLong(2, entity.getEndTime());
-        stmt.bindLong(3, entity.getChangeTime());
+ 
+        Long id = entity.getId();
+        if (id != null) {
+            stmt.bindLong(1, id);
+        }
+        stmt.bindLong(2, entity.getCreateTime());
+        stmt.bindLong(3, entity.getEndTime());
+        stmt.bindLong(4, entity.getChangeTime());
  
         String classify = entity.getClassify();
         if (classify != null) {
-            stmt.bindString(4, classify);
+            stmt.bindString(5, classify);
         }
  
         String grade = entity.getGrade();
         if (grade != null) {
-            stmt.bindString(5, grade);
+            stmt.bindString(6, grade);
         }
  
         String type = entity.getType();
         if (type != null) {
-            stmt.bindString(6, type);
+            stmt.bindString(7, type);
         }
  
         String repeat = entity.getRepeat();
         if (repeat != null) {
-            stmt.bindString(7, repeat);
+            stmt.bindString(8, repeat);
+        }
+ 
+        String data = entity.getData();
+        if (data != null) {
+            stmt.bindString(9, data);
         }
  
         String title = entity.getTitle();
         if (title != null) {
-            stmt.bindString(8, title);
+            stmt.bindString(10, title);
         }
  
         String content = entity.getContent();
         if (content != null) {
-            stmt.bindString(9, content);
+            stmt.bindString(11, content);
         }
  
         String repeatType = entity.getRepeatType();
         if (repeatType != null) {
-            stmt.bindString(10, repeatType);
+            stmt.bindString(12, repeatType);
         }
-        stmt.bindLong(11, entity.getIsFinish() ? 1L: 0L);
-        stmt.bindLong(12, entity.getIsDelay() ? 1L: 0L);
+        stmt.bindLong(13, entity.getIsFinish() ? 1L: 0L);
+        stmt.bindLong(14, entity.getIsDelay() ? 1L: 0L);
     }
 
     @Override
-    public Void readKey(Cursor cursor, int offset) {
-        return null;
+    public Long readKey(Cursor cursor, int offset) {
+        return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
     }    
 
     @Override
     public Task readEntity(Cursor cursor, int offset) {
         Task entity = new Task( //
-            cursor.getLong(offset + 0), // createTime
-            cursor.getLong(offset + 1), // endTime
-            cursor.getLong(offset + 2), // changeTime
-            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // classify
-            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // grade
-            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // type
-            cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // repeat
-            cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7), // title
-            cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8), // content
-            cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9), // repeatType
-            cursor.getShort(offset + 10) != 0, // isFinish
-            cursor.getShort(offset + 11) != 0 // isDelay
+            cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
+            cursor.getLong(offset + 1), // createTime
+            cursor.getLong(offset + 2), // endTime
+            cursor.getLong(offset + 3), // changeTime
+            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // classify
+            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // grade
+            cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // type
+            cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7), // repeat
+            cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8), // data
+            cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9), // title
+            cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10), // content
+            cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11), // repeatType
+            cursor.getShort(offset + 12) != 0, // isFinish
+            cursor.getShort(offset + 13) != 0 // isDelay
         );
         return entity;
     }
      
     @Override
     public void readEntity(Cursor cursor, Task entity, int offset) {
-        entity.setCreateTime(cursor.getLong(offset + 0));
-        entity.setEndTime(cursor.getLong(offset + 1));
-        entity.setChangeTime(cursor.getLong(offset + 2));
-        entity.setClassify(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
-        entity.setGrade(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
-        entity.setType(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
-        entity.setRepeat(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
-        entity.setTitle(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
-        entity.setContent(cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8));
-        entity.setRepeatType(cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9));
-        entity.setIsFinish(cursor.getShort(offset + 10) != 0);
-        entity.setIsDelay(cursor.getShort(offset + 11) != 0);
+        entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
+        entity.setCreateTime(cursor.getLong(offset + 1));
+        entity.setEndTime(cursor.getLong(offset + 2));
+        entity.setChangeTime(cursor.getLong(offset + 3));
+        entity.setClassify(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
+        entity.setGrade(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
+        entity.setType(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
+        entity.setRepeat(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
+        entity.setData(cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8));
+        entity.setTitle(cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9));
+        entity.setContent(cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10));
+        entity.setRepeatType(cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11));
+        entity.setIsFinish(cursor.getShort(offset + 12) != 0);
+        entity.setIsDelay(cursor.getShort(offset + 13) != 0);
      }
     
     @Override
-    protected final Void updateKeyAfterInsert(Task entity, long rowId) {
-        // Unsupported or missing PK type
-        return null;
+    protected final Long updateKeyAfterInsert(Task entity, long rowId) {
+        entity.setId(rowId);
+        return rowId;
     }
     
     @Override
-    public Void getKey(Task entity) {
-        return null;
+    public Long getKey(Task entity) {
+        if(entity != null) {
+            return entity.getId();
+        } else {
+            return null;
+        }
     }
 
     @Override
     public boolean hasKey(Task entity) {
-        // TODO
-        return false;
+        return entity.getId() != null;
     }
 
     @Override

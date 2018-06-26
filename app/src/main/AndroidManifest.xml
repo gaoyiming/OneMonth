@@ -21,7 +21,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".ClassifyActivity" />
-        <activity android:name=".AddTaskActivity"></activity>
+        <activity android:name=".AddTaskActivity" />
+        <activity
+            android:theme="@style/AppTheme.NoActionBar"
+            android:name=".SmileActivity" ></activity>
     </application>
 
 </manifest>
