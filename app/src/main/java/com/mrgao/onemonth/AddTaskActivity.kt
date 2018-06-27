@@ -29,32 +29,94 @@ import java.util.*
 
 class AddTaskActivity : AppCompatActivity() {
     private lateinit var classifyDao: ClassifyDao
-    private lateinit var taskDao: TaskDao
     private lateinit var taskGroupDao: TaskGroupDao
-    private var text_classify: String = ""
+    private lateinit var taskDao: TaskDao
     private lateinit var classifyLists: ArrayList<Classify>
-    private var lists: ArrayList<String> = ArrayList()
-    private var cycleLists: ArrayList<String> = ArrayList()
     private lateinit var tagsAdapter: TextTagsAdapter
     private lateinit var flowTagsAdapter: TagAdapter
-    private var mYear: Int = 0
-    private var mMonth: Int = 0
-    private var mDay: Int = 0
+    private var lists: ArrayList<String> = ArrayList()
+    private var cycleLists: ArrayList<String> = ArrayList()
+    private var calender = Calendar.getInstance()
     private var customDate: Date? = null
     private var isCustom: Boolean = false
     private var currentCircle = "一天"
     private var customCircle = ""
-    var calender = Calendar.getInstance()
+    private var classifyContent = ""
+    private val date = Date()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_task)
-        val mYear = calender.get(Calendar.YEAR);
-        val mMonth = calender.get(Calendar.MONTH);
-        val mDay = calender.get(Calendar.DAY_OF_MONTH);
 
 
+
+
+        setDefaltCircle()
+        flowTagsAdapter = TagAdapter(this)
+        flowlayout.setTagCheckedMode(FlowTagLayout.FLOW_TAG_CHECKED_SINGLE)
+        flowlayout.adapter = flowTagsAdapter
+
+
+        flowlayout.setOnTagSelectListener { parent, selectedList ->
+            if (selectedList == null || selectedList.size == 0) {
+                circle.text = "暂未选择"
+                return@setOnTagSelectListener
+            }
+            val checkCircle = parent.adapter.getItem(0).toString()
+            when (checkCircle) {
+                "自定义" -> {
+                    isCustom = true
+                    showDatePicker()
+                }
+                else -> isCustom = false
+            }
+            circle.text = checkCircle
+            currentCircle = checkCircle
+        }
+
+
+        flowTagsAdapter.clearAndAddAll(cycleLists)
+        getClassify()
+
+        RxBus.instance.register(String::class.java).subscribe { s ->
+            run {
+                if ("CLASSIFY_REFRESH" == s) {
+                    getClassify()
+                }
+            }
+        }
+        addClassify.setOnClickListener { startActivity<ClassifyActivity>() }
+        commit.setOnClickListener {
+            if (TextUtils.isEmpty(classifyContent)) {
+                toast("请选选择一个任务分类")
+                return@setOnClickListener
+            }
+            if (TextUtils.isEmpty(content.text.toString())) {
+                toast("请输入具体任务")
+                return@setOnClickListener
+            }
+            addToDb(classifyContent, content.text.toString())
+        }
+
+        circle.setOnClickListener {
+            if (isCustom) {
+                showDatePicker()
+            }
+        }
+
+
+    }
+
+    private fun showDatePicker() {
+        val mYear = calender.get(Calendar.YEAR)
+        val mMonth = calender.get(Calendar.MONTH)
+        val mDay = calender.get(Calendar.DAY_OF_MONTH)
+        DatePickerDialog(this, onDateSetListener, mYear, mMonth, mDay).show()
+    }
+
+
+    private fun setDefaltCircle() {
         cycleLists.add("一天")
         cycleLists.add("一周")
         cycleLists.add("半月")
@@ -64,58 +126,6 @@ class AddTaskActivity : AppCompatActivity() {
         cycleLists.add("半年")
         cycleLists.add("一年")
         cycleLists.add("自定义")
-        addClassify.setOnClickListener { startActivity<ClassifyActivity>() }
-        commit.setOnClickListener {
-            if (TextUtils.isEmpty(text_classify)) {
-                toast("请选选择一个任务分类")
-                return@setOnClickListener
-            }
-            if (TextUtils.isEmpty(content.text.toString())) {
-                toast("请输入具体任务")
-                return@setOnClickListener
-            }
-
-            addToDb(text_classify, content.text.toString())
-        }
-        RxBus.instance.register(String::class.java).subscribe({ s ->
-            run {
-                if ("CLASSIFY_REFRESH" == s) {
-                    getClassify()
-                }
-            }
-        })
-        flowTagsAdapter = TagAdapter(this)
-        flowlayout.setTagCheckedMode(FlowTagLayout.FLOW_TAG_CHECKED_SINGLE)
-        flowlayout.adapter = flowTagsAdapter
-        flowlayout.setOnTagSelectListener({ parent, selectedList ->
-            isCustom = false
-            if (selectedList != null && selectedList.size > 0) {
-                val sb = StringBuilder()
-                for (i in selectedList) {
-                    sb.append(parent.adapter.getItem(i))
-                }
-                val toString = sb.toString()
-                if ("自定义".equals(toString)) {
-                    isCustom = true
-                    DatePickerDialog(this, onDateSetListener, mYear, mMonth, mDay).show()
-                }
-                circle.text = toString
-            } else {
-                circle.text = "暂未选择"
-            }
-            currentCircle = circle.text as String
-        })
-        circle.setOnClickListener {
-            if (isCustom) {
-                DatePickerDialog(this, onDateSetListener, mYear, mMonth, mDay).show()
-
-            }
-        }
-
-        flowTagsAdapter.clearAndAddAll(cycleLists)
-        getClassify()
-
-
     }
 
     private fun getClassify() {
@@ -130,7 +140,7 @@ class AddTaskActivity : AppCompatActivity() {
         tagsAdapter = object : TextTagsAdapter(lists) {
             override fun getCheckContent(content: String) {
                 classify.text = content
-                text_classify = content
+                classifyContent = content
             }
         }
         tagView.setAdapter(tagsAdapter)
@@ -140,120 +150,76 @@ class AddTaskActivity : AppCompatActivity() {
     private fun addToDb(text_classify: String, toString: String) {
 
 
-        val d = Date()
-        System.out.println(d)
         val sdf = SimpleDateFormat("yyyyMMdd")
-        val dateNowStr = sdf.format(d)
-        var circle = 0
+        val dateNowStr = sdf.format(date)
+        var circleNum = 0
         var insert = 0L
         when (currentCircle) {
-
-            "一天" -> {
-                circle = 0
-            }
-            "一周" -> {
-                circle = 6
-
-            }
-            "半月" -> {
-                circle = 14
-            }
-            "一月" -> {
-                val date = Date()
-                calender.time = date
-                calender.add(Calendar.MONTH, 1)
-                val date2 = calender.time
-                circle = ((date2.time - date.time) / (1000 * 3600 * 24)).toInt()
-
-            }
-            "两个月" -> {
-                val date = Date()
-                calender.time = date
-                calender.add(Calendar.MONTH, 2)
-                val date2 = calender.time
-                circle = ((date2.time - date.time) / (1000 * 3600 * 24)).toInt()
-
-            }
-            "三个月" -> {
-                val date = Date()
-                calender.time = date
-                calender.add(Calendar.MONTH, 3)
-                val date2 = calender.time
-                circle = ((date2.time - date.time) / (1000 * 3600 * 24)).toInt()
-
-            }
-            "半年" -> {
-                val date = Date()
-                calender.time = date
-                calender.add(Calendar.MONTH, 6)
-                val date2 = calender.time
-                circle = ((date2.time - date.time) / (1000 * 3600 * 24)).toInt()
-
-            }
-            "一年" -> {
-                val date = Date()
-                calender.time = date
-                calender.add(Calendar.YEAR, 1)
-                val date2 = calender.time
-                circle = ((date2.time - date.time) / (1000 * 3600 * 24)).toInt()
-
-
-            }
+            "一天" -> circleNum = 0
+            "一周" -> circleNum = 6
+            "半月" -> circleNum = 14
+            "一月" -> circleNum = getCircle(1)
+            "两个月" -> circleNum = getCircle(2)
+            "三个月" -> circleNum = getCircle(3)
+            "半年" -> circleNum = getCircle(6)
+            "一年" -> circleNum = getCircle(12)
             "其他" -> {
-                val date = Date()
-                circle = ((customDate!!.time - date.time) / (1000 * 3600 * 24)).toInt()
-
-            }
-
-            else -> {
+                circleNum = ((customDate!!.time - date.time) / (1000 * 3600 * 24)).toInt()
             }
         }
         val currentTimeMillis = System.currentTimeMillis()
-        Observable.fromIterable(0..circle).flatMap {
-            var date = Date()
+        Observable.fromIterable(0..circleNum).flatMap {
+
 
             calender.time = date
             calender.add(Calendar.DATE, it)
-            date = calender.time
+            var endDate = calender.time
             val format = SimpleDateFormat("yyyyMMdd")
-            val dateFormat = format.format(date)
+            val dateFormat = format.format(endDate)
             val task = Task()
             task.content = toString
             task.classify = text_classify
             task.data = dateFormat
             task.createTime = currentTimeMillis
             insert = taskDao.insert(task)
-            if (it == circle) {
+            if (it == circleNum) {
                 val taskGroup = TaskGroup()
-                var date = Date()
+
                 val format = SimpleDateFormat("yyyy-MM-dd")
                 val dateFormat = format.format(date)
                 taskGroup.createTimeS = dateFormat
                 calender.time = date
-                calender.add(Calendar.DATE, circle)
-                date = calender.time
+                calender.add(Calendar.DATE, circleNum)
+                endDate = calender.time
                 taskGroup.content = toString
                 taskGroup.classify = text_classify
-                val dateFormatEnd = format.format(date)
+                val dateFormatEnd = format.format(endDate)
                 taskGroup.endTimeS = dateFormatEnd
                 taskGroup.createTime = currentTimeMillis
-                taskGroup.dayNum = circle + 1
+                taskGroup.dayNum = circleNum + 1
                 taskGroupDao.insert(taskGroup)
             }
             Observable.just(dateNowStr)
 
         }.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-
-
+                .subscribe {
                     if (insert > 0) {
                         RxBus.instance.post("TODAYTASK_REFRESH")
                         finish()
                     }
+                }
 
-                })
 
+    }
+
+    private fun getCircle(monthNum: Int): Int {
+
+
+        calender.time = date
+        calender.add(Calendar.MONTH, monthNum)
+        val date2 = calender.time
+        return ((date2.time - date.time) / (1000 * 3600 * 24)).toInt()
 
     }
 
@@ -268,22 +234,26 @@ class AddTaskActivity : AppCompatActivity() {
      * 日期选择器对话框监听
      */
     private val onDateSetListener = DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
-        mYear = year
-        mMonth = monthOfYear
-        mDay = dayOfMonth
+
         val days: String
-        if (mMonth + 1 < 10) {
-            if (mDay < 10) {
-                days = StringBuffer().append(mYear).append("年").append("0").append(mMonth + 1).append("月").append("0").append(mDay).append("日").toString()
+        if (monthOfYear + 1 < 10) {
+            days = if (dayOfMonth < 10) {
+                StringBuffer().append(year).append("年").append("0")
+                        .append(monthOfYear + 1).append("月").append("0").append(dayOfMonth)
+                        .append("日").toString()
             } else {
-                days = StringBuffer().append(mYear).append("年").append("0").append(mMonth + 1).append("月").append(mDay).append("日").toString()
+                StringBuffer().append(year).append("年").append("0")
+                        .append(monthOfYear + 1).append("月").append(dayOfMonth).append("日")
+                        .toString()
             }
 
         } else {
-            if (mDay < 10) {
-                days = StringBuffer().append(mYear).append("年").append(mMonth + 1).append("月").append("0").append(mDay).append("日").toString()
+            days = if (dayOfMonth < 10) {
+                StringBuffer().append(year).append("年").append(monthOfYear + 1)
+                        .append("月").append("0").append(dayOfMonth).append("日").toString()
             } else {
-                days = StringBuffer().append(mYear).append("年").append(mMonth + 1).append("月").append(mDay).append("日").toString()
+                StringBuffer().append(year).append("年").append(monthOfYear + 1)
+                        .append("月").append(dayOfMonth).append("日").toString()
             }
 
         }
