@@ -30,13 +30,11 @@ class TodayTaskFragment : BaseDatabindingFragment<FragmentTodayTaskBinding>() {
     override fun initdate() {
         super.initdate()
         getData()
-        RxBus.instance.register(String::class.java).subscribe(
-                { freshTag ->
-                    if ("TODAYTASK_REFRESH".endsWith(freshTag)) {
-                        getData()
-                    }
-                }
-        )
+        RxBus.instance.register(String::class.java).subscribe { freshTag ->
+            if ("TODAYTASK_REFRESH".endsWith(freshTag)) {
+                getData()
+            }
+        }
     }
 
     private fun getData() {

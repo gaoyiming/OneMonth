@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:bind="http://schemas.android.com/tools">
 
     <data>
 
@@ -8,73 +8,27 @@
             type="com.mrgao.onemonth.bean.TaskGroup" />
     </data>
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <com.tubb.smrv.SwipeHorizontalMenuLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:sml="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/sml"
         android:layout_width="match_parent"
-        android:layout_height="120dp"
-        android:layout_marginTop="10dp"
-        android:background="#88EE799F"
+        android:layout_height="wrap_content"
+        sml:sml_auto_open_percent="0.2"
+        sml:sml_scroller_duration="750"
+        sml:sml_scroller_interpolator="@android:anim/bounce_interpolator">
 
-        >
+        <include
+            android:id="@id/smContentView"
+            layout="@layout/item_taskgroup_center"
+            bind:taskgroup="@{taskgroup}" />
 
-        <!--<TextView-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_alignParentRight="true"-->
+        <include
+            android:id="@id/smMenuViewLeft"
+            layout="@layout/item_taskgroup_left" />
 
-        <!--android:layout_centerVertical="true"-->
-        <!--android:layout_marginEnd="20dp"-->
-        <!--android:layout_marginLeft="20dp"-->
-        <!--android:layout_marginTop="20dp"-->
-        <!--android:text="@{taskgroup.isFinish?@string/finish:@string/unfinish}" />-->
+        <include
+            android:id="@id/smMenuViewRight"
+            layout="@layout/item_taskgroup_reght" />
 
-        <TextView
-            android:id="@+id/classify"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="15dp"
-            android:text="@{taskgroup.classify}"
-            android:textColor="@color/white"
-
-            android:textSize="@dimen/text_big" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-
-
-            android:layout_marginStart="50dp"
-            android:layout_marginTop="18dp"
-            android:layout_toRightOf="@id/classify"
-
-            android:text="@{taskgroup.content}"
-            android:textColor="@color/white" />
-
-        <TextView
-            android:id="@+id/time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/classify"
-
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="15dp"
-            android:text="@{@string/time_circle+taskgroup.createTimeS+@string/to+taskgroup.endTimeS}"
-            android:textColor="@color/white"
-
-             />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-
-            android:layout_below="@id/time"
-
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="15dp"
-
-
-            android:text="@{@string/task_days+taskgroup.dayNum+@string/finish_days+taskgroup.finishNum+@string/target_days+taskgroup.targetNum}"
-            android:textColor="@color/white" />
-    </RelativeLayout>
+    </com.tubb.smrv.SwipeHorizontalMenuLayout>
 </layout>
