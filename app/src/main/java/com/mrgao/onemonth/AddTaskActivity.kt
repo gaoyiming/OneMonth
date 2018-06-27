@@ -4,7 +4,9 @@ import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.text.Editable
 import android.text.TextUtils
+import android.text.TextWatcher
 import android.view.KeyEvent
 import com.mrgao.onemonth.adapter.TextTagsAdapter
 import com.mrgao.onemonth.bean.Classify
@@ -43,7 +45,7 @@ class AddTaskActivity : AppCompatActivity() {
     private var customCircle = ""
     private var classifyContent = ""
     private val date = Date()
-
+    private var circleNum = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,11 +61,13 @@ class AddTaskActivity : AppCompatActivity() {
 
 
         flowlayout.setOnTagSelectListener { parent, selectedList ->
+
+
             if (selectedList == null || selectedList.size == 0) {
                 circle.text = "暂未选择"
                 return@setOnTagSelectListener
             }
-            val checkCircle = parent.adapter.getItem(0).toString()
+            val checkCircle = parent.adapter.getItem(selectedList[0]).toString()
             when (checkCircle) {
                 "自定义" -> {
                     isCustom = true
@@ -73,6 +77,21 @@ class AddTaskActivity : AppCompatActivity() {
             }
             circle.text = checkCircle
             currentCircle = checkCircle
+            circleNum = when (currentCircle) {
+                "一天" -> 0
+                "一周" -> 6
+                "半月" -> 14
+                "一月" -> getCircle(1)
+                "两个月" -> getCircle(2)
+                "三个月" -> getCircle(3)
+                "半年" -> getCircle(6)
+                "一年" -> getCircle(12)
+                "其他" -> {
+                    ((customDate!!.time - date.time) / (1000 * 3600 * 24)).toInt()
+                }
+                else -> -1
+            }
+            circleNum += 1
         }
 
 
@@ -96,9 +115,40 @@ class AddTaskActivity : AppCompatActivity() {
                 toast("请输入具体任务")
                 return@setOnClickListener
             }
-            addToDb(classifyContent, content.text.toString())
+            if (TextUtils.isEmpty(targetNum.text.toString())) {
+                toast("请输入目标天数")
+                return@setOnClickListener
+            }
+
+            addToDb()
         }
 
+        targetNum.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+                //输入文字前触发
+            }
+
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                //text改变过程中，一般在此加入监听事件。
+            }
+
+            @SuppressLint("SetTextI18n")
+            override fun afterTextChanged(s: Editable) {
+                if (s.toString().isEmpty())
+                    return
+                if (circleNum == 0) {
+                    toast("请先选择任务周期")
+                    return
+                }
+
+
+                //输入后触发
+                if (s.toString().toInt() > circleNum) {
+                    targetNum.setText("" + circleNum)
+                    toast("目标天数最多为" + circleNum + "天")
+                }
+            }
+        })
         circle.setOnClickListener {
             if (isCustom) {
                 showDatePicker()
@@ -147,27 +197,16 @@ class AddTaskActivity : AppCompatActivity() {
     }
 
     @SuppressLint("SimpleDateFormat")
-    private fun addToDb(text_classify: String, toString: String) {
+    private fun addToDb() {
 
 
         val sdf = SimpleDateFormat("yyyyMMdd")
         val dateNowStr = sdf.format(date)
-        var circleNum = 0
+
         var insert = 0L
-        when (currentCircle) {
-            "一天" -> circleNum = 0
-            "一周" -> circleNum = 6
-            "半月" -> circleNum = 14
-            "一月" -> circleNum = getCircle(1)
-            "两个月" -> circleNum = getCircle(2)
-            "三个月" -> circleNum = getCircle(3)
-            "半年" -> circleNum = getCircle(6)
-            "一年" -> circleNum = getCircle(12)
-            "其他" -> {
-                circleNum = ((customDate!!.time - date.time) / (1000 * 3600 * 24)).toInt()
-            }
-        }
+
         val currentTimeMillis = System.currentTimeMillis()
+        circleNum -= 1
         Observable.fromIterable(0..circleNum).flatMap {
 
 
@@ -177,8 +216,8 @@ class AddTaskActivity : AppCompatActivity() {
             val format = SimpleDateFormat("yyyyMMdd")
             val dateFormat = format.format(endDate)
             val task = Task()
-            task.content = toString
-            task.classify = text_classify
+            task.content = content.text.toString()
+            task.classify = classify.text.toString()
             task.data = dateFormat
             task.createTime = currentTimeMillis
             insert = taskDao.insert(task)
@@ -191,8 +230,9 @@ class AddTaskActivity : AppCompatActivity() {
                 calender.time = date
                 calender.add(Calendar.DATE, circleNum)
                 endDate = calender.time
-                taskGroup.content = toString
-                taskGroup.classify = text_classify
+                taskGroup.content = content.text.toString()
+                taskGroup.classify = classify.text.toString()
+                taskGroup.targetNum = targetNum.text.toString().toInt()
                 val dateFormatEnd = format.format(endDate)
                 taskGroup.endTimeS = dateFormatEnd
                 taskGroup.createTime = currentTimeMillis
@@ -262,3 +302,5 @@ class AddTaskActivity : AppCompatActivity() {
         circle.text = days
     }
 }
+
+

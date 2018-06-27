@@ -26,4 +26,5 @@
     <string name="to">至</string>
     <string name="task_days">任务总天数：</string>
     <string name="finish_days">   ，打卡天数：</string>
+    <string name="target_days">   ，目标天数：</string>
 </resources>

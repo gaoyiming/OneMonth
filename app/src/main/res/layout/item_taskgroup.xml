@@ -74,7 +74,7 @@
             android:layout_marginTop="15dp"
 
 
-            android:text="@{@string/task_days+taskgroup.dayNum+@string/finish_days+taskgroup.finishNum}"
+            android:text="@{@string/task_days+taskgroup.dayNum+@string/finish_days+taskgroup.finishNum+@string/target_days+taskgroup.targetNum}"
             android:textColor="@color/white" />
     </RelativeLayout>
 </layout>

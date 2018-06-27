@@ -24,6 +24,7 @@ public class TaskGroup {
     private String changeTimeS;
     private int finishNum;
     private int dayNum;
+    private int targetNum;
     private String classify;
     private String icon;
     private String color;
@@ -37,12 +38,12 @@ public class TaskGroup {
     private boolean isFinish;
     private boolean isDelay;
 
-    @Generated(hash = 1695689049)
+    @Generated(hash = 21631907)
     public TaskGroup(Long id, long createTime, long endTime, long changeTime,
-                     String createTimeS, String endTimeS, String changeTimeS, int finishNum,
-                     int dayNum, String classify, String icon, String color, String grade,
-                     String type, String repeat, String data, String title, String content,
-                     String repeatType, boolean isFinish, boolean isDelay) {
+            String createTimeS, String endTimeS, String changeTimeS, int finishNum,
+            int dayNum, int targetNum, String classify, String icon, String color,
+            String grade, String type, String repeat, String data, String title,
+            String content, String repeatType, boolean isFinish, boolean isDelay) {
         this.id = id;
         this.createTime = createTime;
         this.endTime = endTime;
@@ -52,6 +53,7 @@ public class TaskGroup {
         this.changeTimeS = changeTimeS;
         this.finishNum = finishNum;
         this.dayNum = dayNum;
+        this.targetNum = targetNum;
         this.classify = classify;
         this.icon = icon;
         this.color = color;
@@ -236,5 +238,13 @@ public class TaskGroup {
 
     public void setChangeTimeS(String changeTimeS) {
         this.changeTimeS = changeTimeS;
+    }
+
+    public int getTargetNum() {
+        return this.targetNum;
+    }
+
+    public void setTargetNum(int targetNum) {
+        this.targetNum = targetNum;
     }
 }
