@@ -1,5 +1,6 @@
 package com.mrgao.onemonth
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
@@ -23,6 +24,8 @@ import java.util.*
 class TodayTaskFragment : BaseDatabindingFragment<FragmentTodayTaskBinding>() {
     lateinit var bindingAdapter: BindingAdapter<Task>
     var taskList: ArrayList<Task> = ArrayList()
+
+
     override fun getLayoutId(): Int {
         return R.layout.fragment_today_task
     }
@@ -37,18 +40,20 @@ class TodayTaskFragment : BaseDatabindingFragment<FragmentTodayTaskBinding>() {
         }
     }
 
+    @SuppressLint("SimpleDateFormat")
     private fun getData() {
         val date = Date()
         val format = SimpleDateFormat("yyyyMMdd")
         val dateFormat = format.format(date)
         taskList = DButil.getDaosession().taskDao.queryBuilder().where(TaskDao.Properties.Data.eq(dateFormat)).list() as ArrayList<Task>
 
-
+        taskList.sortBy { it.classify }
         bindingAdapter.dates = taskList
     }
 
     override fun initUI(view: View?, savedInstanceState: Bundle?) {
         recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        var defaultClassify = ""
         bindingAdapter = object : BindingAdapter<Task>(taskList, R.layout.item_task, BR.task) {
             override fun convert(holder: BindingHolder<*>?, position: Int, t: Task?) {
                 super.convert(holder, position, t)
@@ -60,6 +65,10 @@ class TodayTaskFragment : BaseDatabindingFragment<FragmentTodayTaskBinding>() {
                     binding.sml.scrollX = 0
 
                 }
+                if (defaultClassify != taskList[position].classify) {
+                    binding.title.visibility = View.VISIBLE
+                }
+                defaultClassify = taskList[position].classify
                 val itemTaskReghtBinding = binding.smMenuViewRight as ItemTaskReghtBinding
                 itemTaskReghtBinding.right.setOnClickListener {
                     binding.sml.scrollX = 0

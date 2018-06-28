@@ -16,5 +16,6 @@
     <color name="eyesColor">#ffffff</color>
     <color name="tongueColor">#c32925</color>
     <color name="mouthColor">#ffffff</color>
+    <color name="tiny_blue">#b4de6d</color>
 
 </resources>

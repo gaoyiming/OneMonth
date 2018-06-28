@@ -3,6 +3,8 @@ package com.mrgao.onemonth.utils;
 import android.content.Context;
 
 import com.onemonth.dao.DaoMaster;
+import com.onemonth.dao.JudgeByDayDao;
+import com.onemonth.dao.JudgeByGroupDao;
 import com.onemonth.dao.TaskDao;
 import com.onemonth.dao.TaskGroupDao;
 
@@ -49,7 +51,7 @@ public class MySQLiteOpenHelper extends DaoMaster.OpenHelper {
                 DaoMaster.dropAllTables(db, ifExists);
 
             }
-        }, TaskDao.class, TaskGroupDao.class);
+        }, TaskDao.class, TaskGroupDao.class, JudgeByDayDao.class, JudgeByGroupDao.class);
 
     }
 }
