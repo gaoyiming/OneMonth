@@ -23,8 +23,11 @@
         <activity android:name=".ClassifyActivity" />
         <activity android:name=".AddTaskActivity" />
         <activity
-            android:theme="@style/AppTheme.NoActionBar"
-            android:name=".SmileActivity" ></activity>
+            android:name=".SmileActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".CalanderActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

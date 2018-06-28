@@ -1,6 +1,5 @@
 package com.mrgao.onemonth
 
-import android.graphics.Color
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.NavigationView
@@ -11,9 +10,6 @@ import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import com.azhon.suspensionfab.FabAttributes
-import com.azhon.suspensionfab.OnFabClickListener
-import com.azhon.suspensionfab.SuspensionFab
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import org.jetbrains.anko.startActivity
@@ -28,7 +24,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setSupportActionBar(toolbar)
         val fab = findViewById<View>(R.id.fab) as FloatingActionButton
         fab.setOnClickListener { view ->
-            startActivity<AddTaskActivity>()
+            //            startActivity<AddTaskActivity>()
+            startActivity<CalanderActivity>()
         }
         val toggle = ActionBarDrawerToggle(
                 this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
