@@ -4,8 +4,15 @@ import android.app.Application;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Looper;
 import android.util.DisplayMetrics;
+
+import com.mrgao.onemonth.utils.MySQLiteOpenHelper;
+import com.onemonth.dao.DaoMaster;
+import com.onemonth.dao.DaoSession;
+
+import org.greenrobot.greendao.identityscope.IdentityScopeType;
 
 
 /**
@@ -34,6 +41,7 @@ public  class BaseApplication extends Application {
     public void onCreate() {
         super.onCreate();
         context = getApplicationContext();
+
 //        resources = getContext().getResources();
 //        dm = resources.getDisplayMetrics();
 //        config = resources.getConfiguration();
@@ -54,7 +62,7 @@ public  class BaseApplication extends Application {
         initNetFrame();
         initThird();
 
-
+        setupDatabase();
     }
 
     private void initThird() {
@@ -67,6 +75,19 @@ public  class BaseApplication extends Application {
         // QQ和Qzone appid appkey
     }
 
+    /**
+     * 配置数据库
+     */
+    private void setupDatabase() {
+        //创建数据库shop.db"
+//        MySQLiteOpenHelper helper = new MySQLiteOpenHelper(this, Contant.DB_NAME, null);
+        //获取可写数据库
+        SQLiteDatabase db = MySQLiteOpenHelper.getInstance(this).getWritableDatabase();
+        //获取数据库对象
+        DaoMaster daoMaster = new DaoMaster(db);
+        //获取Dao对象管理者
+        DaoSession daoSession = daoMaster.newSession(IdentityScopeType.None);
+    }
     private void initNetFrame() {
 
     }

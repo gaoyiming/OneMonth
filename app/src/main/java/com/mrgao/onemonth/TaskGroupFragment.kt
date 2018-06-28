@@ -1,5 +1,6 @@
 package com.mrgao.onemonth
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
@@ -30,13 +31,11 @@ class TaskGroupFragment : BaseDatabindingFragment<FragmentTodayTaskBinding>() {
     override fun initdate() {
         super.initdate()
         getData()
-        RxBus.instance.register(String::class.java).subscribe(
-                { freshTag ->
-                    if ("TODAYTASK_REFRESH".endsWith(freshTag)) {
-                        getData()
-                    }
-                }
-        )
+        RxBus.instance.register(String::class.java).subscribe { freshTag ->
+            if ("TODAYTASK_REFRESH".endsWith(freshTag)) {
+                getData()
+            }
+        }
     }
 
     private fun getData() {
@@ -77,6 +76,7 @@ class TaskGroupFragment : BaseDatabindingFragment<FragmentTodayTaskBinding>() {
     }
 
 
+    @SuppressLint("SimpleDateFormat")
     private fun deleteTaskAfterToday(taskDao: TaskDao, createTime: Long) {
         val date = Date()
         val sdf = SimpleDateFormat("yyyyMMdd")
