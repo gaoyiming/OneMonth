@@ -28,21 +28,8 @@ class CalanderActivity : AppCompatActivity(), CalendarView.OnDateSelectedListene
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_calander)
 
-
-
-
         getFinished()
-//        schemes.add(getSchemeCalendar(year, month, 3, -0xbf24db, "假"))
-//        schemes.add(getSchemeCalendar(year, month, 6, -0x196ec8, "事"))
-//        schemes.add(getSchemeCalendar(year, month, 9, -0x20ecaa, "议"))
-//        schemes.add(getSchemeCalendar(year, month, 13, -0x123a93, "记"))
-//        schemes.add(getSchemeCalendar(year, month, 14, -0x123a93, "记"))
-//        schemes.add(getSchemeCalendar(year, month, 15, -0x5533bc, "假"))
-//        schemes.add(getSchemeCalendar(year, month, 18, -0x43ec10, "记"))
-//        schemes.add(getSchemeCalendar(year, month, 25, -0xec5310, "假"))
 
-
-        defaultClassify = ""
 
         bindingAdapter = object : BindingAdapter<Task>(taskList, R.layout.item_calander_task, BR.task) {
             override fun convert(holder: BindingHolder<*>?, position: Int, t: Task?) {
@@ -169,6 +156,7 @@ class CalanderActivity : AppCompatActivity(), CalendarView.OnDateSelectedListene
 
         taskList.sortBy { it.classify }
         bindingAdapter.dates = taskList
+        defaultClassify = ""
     }
 
     override fun onYearChange(year: Int) {
