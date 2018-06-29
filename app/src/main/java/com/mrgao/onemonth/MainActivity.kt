@@ -17,20 +17,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-//        setSupportActionBar(toolbar)
         fab.setOnClickListener {
             startActivity<AddTaskActivity>()
-
         }
         calander.setOnClickListener {
             startActivity<CalanderActivity>()
         }
-//        val toggle = ActionBarDrawerToggle(
-//                this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
-//        drawer_layout.addDrawerListener(toggle)
-//        toggle.syncState()
         showFragment("TODAY_TASK")
-
         nav_view.setNavigationItemSelectedListener(this)
 
     }
@@ -75,7 +68,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        // Handle navigation view item clicks here.
         when (item.itemId) {
             R.id.today_task -> {
                 showFragment("TODAY_TASK")

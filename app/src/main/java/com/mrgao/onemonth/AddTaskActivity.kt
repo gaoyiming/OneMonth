@@ -313,7 +313,8 @@ class AddTaskActivity : AppCompatActivity() {
 
         }
         customCircle = "" + year + monthOfYear + dayOfMonth
-        customDate = Date(year, monthOfYear, dayOfMonth)
+        customDate = Date(year-1900, monthOfYear, dayOfMonth)
+        circleNum = ((customDate!!.time - date.time) / (1000 * 3600 * 24)).toInt()+1
         circle.text = days
     }
 }
