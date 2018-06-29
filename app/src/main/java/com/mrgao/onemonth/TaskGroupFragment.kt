@@ -13,6 +13,7 @@ import com.mrgao.onemonth.databinding.ItemTaskgroupBinding
 import com.mrgao.onemonth.databinding.ItemTaskgroupLeftBinding
 import com.mrgao.onemonth.databinding.ItemTaskgroupReghtBinding
 import com.mrgao.onemonth.model.DButil
+import com.mrgao.onemonth.model.DButil.checkIsFinish
 import com.mrgao.onemonth.rx.RxBus
 import com.onemonth.dao.TaskDao
 import com.onemonth.dao.TaskGroupDao
@@ -39,12 +40,7 @@ class TaskGroupFragment : BaseDatabindingFragment<FragmentTodayTaskBinding>() {
     }
 
     private fun getData() {
-//        val date = Date()
-//        val format = SimpleDateFormat("yyyyMMdd")
-//        val dateFormat = format.format(date)
-         taskList = DButil.getDaosession().taskGroupDao.loadAll() as ArrayList<TaskGroup>
-
-
+        taskList = DButil.daosession.taskGroupDao.loadAll() as ArrayList<TaskGroup>
         bindingAdapter.dates = taskList
     }
 
@@ -54,7 +50,7 @@ class TaskGroupFragment : BaseDatabindingFragment<FragmentTodayTaskBinding>() {
             override fun convert(holder: BindingHolder<*>?, position: Int, t: TaskGroup?) {
                 super.convert(holder, position, t)
                 val binding = holder!!.binding as ItemTaskgroupBinding
-                val taskDao = DButil.getDaosession().taskDao
+                val taskDao = DButil.daosession.taskDao
                 val itemTaskLeftBinding = binding.smMenuViewLeft as ItemTaskgroupLeftBinding
                 val createTime = taskList[position].createTime
                 itemTaskLeftBinding.left.setOnClickListener {
@@ -94,10 +90,12 @@ class TaskGroupFragment : BaseDatabindingFragment<FragmentTodayTaskBinding>() {
         for (task in list) {
             taskDao.delete(task)
         }
-        val taskGroupDao = DButil.getDaosession().taskGroupDao
+        val taskGroupDao = DButil.daosession.taskGroupDao
         val taskGroup = taskGroupDao.queryBuilder().where(TaskGroupDao.Properties.CreateTime.eq(createTime)).unique()
         taskGroupDao.delete(taskGroup)
+        checkIsFinish(taskDao, list[0].data, list[0].classify)
         RxBus.instance.post("TODAYTASK_REFRESH")
+
     }
 
 

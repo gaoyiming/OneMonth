@@ -10,6 +10,7 @@ import com.haibin.calendarview.CalendarView
 import com.mrgao.onemonth.base.BindingAdapter
 import com.mrgao.onemonth.base.BindingHolder
 import com.mrgao.onemonth.bean.Task
+import com.mrgao.onemonth.databinding.ItemCalanderTaskBinding
 import com.mrgao.onemonth.model.DButil
 import com.onemonth.dao.TaskDao
 import kotlinx.android.synthetic.main.activity_calander.*
@@ -18,7 +19,7 @@ import java.util.*
 class CalanderActivity : AppCompatActivity(), CalendarView.OnDateSelectedListener,
         CalendarView.OnYearChangeListener {
 
-
+    private var defaultClassify = ""
     private var mYear: Int = 0
     lateinit var bindingAdapter: BindingAdapter<Task>
     var taskList: ArrayList<Task> = ArrayList()
@@ -28,10 +29,9 @@ class CalanderActivity : AppCompatActivity(), CalendarView.OnDateSelectedListene
         setContentView(R.layout.activity_calander)
 
 
-        val schemes = ArrayList<Calendar>()
-        val year = calendarView.curYear
-        val month = calendarView.curMonth
 
+
+        getFinished()
 //        schemes.add(getSchemeCalendar(year, month, 3, -0xbf24db, "假"))
 //        schemes.add(getSchemeCalendar(year, month, 6, -0x196ec8, "事"))
 //        schemes.add(getSchemeCalendar(year, month, 9, -0x20ecaa, "议"))
@@ -40,14 +40,14 @@ class CalanderActivity : AppCompatActivity(), CalendarView.OnDateSelectedListene
 //        schemes.add(getSchemeCalendar(year, month, 15, -0x5533bc, "假"))
 //        schemes.add(getSchemeCalendar(year, month, 18, -0x43ec10, "记"))
 //        schemes.add(getSchemeCalendar(year, month, 25, -0xec5310, "假"))
-        calendarView.setSchemeDate(schemes)
 
 
-        var defaultClassify = ""
-        bindingAdapter = object : BindingAdapter<Task>(taskList, R.layout.item_task, BR.task) {
+        defaultClassify = ""
+
+        bindingAdapter = object : BindingAdapter<Task>(taskList, R.layout.item_calander_task, BR.task) {
             override fun convert(holder: BindingHolder<*>?, position: Int, t: Task?) {
                 super.convert(holder, position, t)
-//                val binding = holder!!.binding as ItemTaskBinding
+                val binding = holder!!.binding as ItemCalanderTaskBinding
 //                val taskDao = DButil.getDaosession().taskDao
 //                val itemTaskLeftBinding = binding.smMenuViewLeft as ItemTaskLeftBinding
 //                itemTaskLeftBinding.left.setOnClickListener {
@@ -55,10 +55,13 @@ class CalanderActivity : AppCompatActivity(), CalendarView.OnDateSelectedListene
 //                    binding.sml.scrollX = 0
 //
 //                }
-//                if (defaultClassify != taskList[position].classify) {
-//                    binding.title.visibility = View.VISIBLE
-//                }
-//                defaultClassify = taskList[position].classify
+                if (defaultClassify.equals(taskList[position].classify)) {
+                    binding.title.visibility = View.GONE
+                }
+                defaultClassify = taskList[position].classify
+                if (position == taskList.size - 1) {
+                    defaultClassify = ""
+                }
 //                val itemTaskReghtBinding = binding.smMenuViewRight as ItemTaskReghtBinding
 //                itemTaskReghtBinding.right.setOnClickListener {
 //                    binding.sml.scrollX = 0
@@ -103,6 +106,30 @@ class CalanderActivity : AppCompatActivity(), CalendarView.OnDateSelectedListene
         tv_current_day.text = calendarView.curDay.toString()
     }
 
+    private fun getFinished() {
+        val schemes = ArrayList<Calendar>()
+        val year = calendarView.curYear
+        val month = calendarView.curMonth
+        val smonth: String
+        if (month > 9) {
+            smonth = month.toString()
+        } else {
+            smonth = "0" + month.toString()
+        }
+        val judgeByDayDao = DButil.daosession.judgeByDayDao
+        val loadAll = judgeByDayDao.loadAll()
+        loadAll.filter {
+            it.data.startsWith("" + year + smonth)
+
+        }.filter {
+            it.isFinish
+        }.forEach {
+            schemes.add(getSchemeCalendar(year, month, it.data.substring(6).toInt(), -0xbf24db, "假"))
+        }
+        calendarView.setSchemeDate(schemes)
+
+    }
+
     private fun getSchemeCalendar(year: Int, month: Int, day: Int, color: Int, text: String): Calendar {
         val calendar = Calendar()
         calendar.year = year
@@ -116,7 +143,7 @@ class CalanderActivity : AppCompatActivity(), CalendarView.OnDateSelectedListene
 
     @SuppressLint("SetTextI18n")
     override fun onDateSelected(calendar: Calendar, isClick: Boolean) {
-
+        defaultClassify = ""
         tv_lunar.visibility = View.VISIBLE
         tv_year.visibility = View.VISIBLE
         tv_month_day.text = calendar.month.toString() + "月" + calendar.day + "日"
@@ -138,7 +165,7 @@ class CalanderActivity : AppCompatActivity(), CalendarView.OnDateSelectedListene
 
         val data = calendar.year.toString() + smonth + sday
 
-        taskList = DButil.getDaosession().taskDao.queryBuilder().where(TaskDao.Properties.Data.eq(data)).list() as ArrayList<Task>
+        taskList = DButil.daosession.taskDao.queryBuilder().where(TaskDao.Properties.Data.eq(data)).list() as ArrayList<Task>
 
         taskList.sortBy { it.classify }
         bindingAdapter.dates = taskList

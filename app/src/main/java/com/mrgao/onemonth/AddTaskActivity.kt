@@ -16,9 +16,7 @@ import com.mrgao.onemonth.model.DButil
 import com.mrgao.onemonth.rx.RxBus
 import com.mrgao.onemonth.view.flowlayout.FlowTagLayout
 import com.mrgao.onemonth.view.flowlayout.TagAdapter
-import com.onemonth.dao.ClassifyDao
-import com.onemonth.dao.TaskDao
-import com.onemonth.dao.TaskGroupDao
+import com.onemonth.dao.*
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -179,9 +177,9 @@ class AddTaskActivity : AppCompatActivity() {
     }
 
     private fun getClassify() {
-        classifyDao = DButil.getDaosession().classifyDao
-        taskDao = DButil.getDaosession().taskDao
-        taskGroupDao = DButil.getDaosession().taskGroupDao
+        classifyDao = DButil.daosession.classifyDao
+        taskDao = DButil.daosession.taskDao
+        taskGroupDao = DButil.daosession.taskGroupDao
         classifyLists = classifyDao.loadAll() as ArrayList<Classify>
         lists.clear()
         for (classify in classifyLists) {
@@ -198,7 +196,6 @@ class AddTaskActivity : AppCompatActivity() {
 
     @SuppressLint("SimpleDateFormat")
     private fun addToDb() {
-
 
         val sdf = SimpleDateFormat("yyyyMMdd")
         val dateNowStr = sdf.format(date)
@@ -221,12 +218,29 @@ class AddTaskActivity : AppCompatActivity() {
             task.data = dateFormat
             task.createTime = currentTimeMillis
             insert = taskDao.insert(task)
+
+            if(it==0){
+                val judgeByDayDao = DButil.daosession.judgeByDayDao
+                val unique = judgeByDayDao.queryBuilder().where(JudgeByDayDao.Properties.Data.eq(dateFormat)).unique()
+                if (unique != null) {
+                    unique.isFinish = false
+                    judgeByDayDao.update(unique)
+                }
+                val judgeByGroupDao = DButil.daosession.judgeByGroupDao
+                val judgeByGroup = judgeByGroupDao.queryBuilder()
+                        .where(JudgeByGroupDao.Properties.Data.eq(dateFormat), JudgeByGroupDao.Properties.Classify.eq(classify)).unique()
+                if (judgeByGroup != null) {
+                    judgeByGroup.isFinish = false
+
+                    judgeByGroupDao.update(judgeByGroup)
+                }
+            }
             if (it == circleNum) {
                 val taskGroup = TaskGroup()
 
                 val format = SimpleDateFormat("yyyy-MM-dd")
-                val dateFormat = format.format(date)
-                taskGroup.createTimeS = dateFormat
+                val sdateFormat = format.format(date)
+                taskGroup.createTimeS = sdateFormat
                 calender.time = date
                 calender.add(Calendar.DATE, circleNum)
                 endDate = calender.time
@@ -238,6 +252,7 @@ class AddTaskActivity : AppCompatActivity() {
                 taskGroup.createTime = currentTimeMillis
                 taskGroup.dayNum = circleNum + 1
                 taskGroupDao.insert(taskGroup)
+
             }
             Observable.just(dateNowStr)
 

@@ -20,7 +20,7 @@ class ClassifyActivity : AppCompatActivity() {
     lateinit var classifyLists: ArrayList<Classify>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        classifyDao = DButil.getDaosession().classifyDao
+        classifyDao = DButil.daosession.classifyDao
 
 
         setContentView(R.layout.activity_classify)
