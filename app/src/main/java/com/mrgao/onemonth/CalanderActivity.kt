@@ -21,58 +21,31 @@ class CalanderActivity : AppCompatActivity(), CalendarView.OnDateSelectedListene
 
     private var defaultClassify = ""
     private var mYear: Int = 0
-    lateinit var bindingAdapter: BindingAdapter<Task>
+    private lateinit var bindingAdapter: BindingAdapter<Task>
     var taskList: ArrayList<Task> = ArrayList()
 
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_calander)
-
         getFinished()
-
-
         bindingAdapter = object : BindingAdapter<Task>(taskList, R.layout.item_calander_task, BR.task) {
             override fun convert(holder: BindingHolder<*>?, position: Int, t: Task?) {
                 super.convert(holder, position, t)
                 val binding = holder!!.binding as ItemCalanderTaskBinding
-//                val taskDao = DButil.getDaosession().taskDao
-//                val itemTaskLeftBinding = binding.smMenuViewLeft as ItemTaskLeftBinding
-//                itemTaskLeftBinding.left.setOnClickListener {
-//                    startActivity<SmileActivity>("id" to taskList[position].id)
-//                    binding.sml.scrollX = 0
-//
-//                }
-                if (defaultClassify.equals(taskList[position].classify)) {
+                if (defaultClassify == taskList[position].classify) {
                     binding.title.visibility = View.GONE
                 }
                 defaultClassify = taskList[position].classify
                 if (position == taskList.size - 1) {
                     defaultClassify = ""
                 }
-//                val itemTaskReghtBinding = binding.smMenuViewRight as ItemTaskReghtBinding
-//                itemTaskReghtBinding.right.setOnClickListener {
-//                    binding.sml.scrollX = 0
-//
-//                    taskDao.delete(taskList[position])
-//                    RxBus.instance.post("TODAYTASK_REFRESH")
-//                }
             }
 
         }
         recyclerView.adapter = bindingAdapter
         bindingAdapter.dates = taskList
-
-
-
-
-
-
-
-
         recyclerView.layoutManager = LinearLayoutManager(this)
-//        recyclerView.addItemDecoration(GroupItemDecoration<String, Article>())
-//        recyclerView.adapter = ArticleAdapter(this)
-//        recyclerView.notifyDataSetChanged()
         tv_month_day.setOnClickListener(View.OnClickListener {
             if (!calendarLayout.isExpand) {
                 calendarView.showYearSelectLayout(mYear)
@@ -83,7 +56,7 @@ class CalanderActivity : AppCompatActivity(), CalendarView.OnDateSelectedListene
             tv_year.visibility = View.GONE
             tv_month_day.text = mYear.toString()
         })
-        //findViewById(R.id.fl_current).setOnClickListener(View.OnClickListener { calendarView.scrollToCurrent() })
+
         calendarView.setOnDateSelectedListener(this)
         calendarView.setOnYearChangeListener(this)
         tv_year.text = calendarView.curYear.toString()
@@ -97,17 +70,16 @@ class CalanderActivity : AppCompatActivity(), CalendarView.OnDateSelectedListene
         val schemes = ArrayList<Calendar>()
         val year = calendarView.curYear
         val month = calendarView.curMonth
-        val smonth: String
-        if (month > 9) {
-            smonth = month.toString()
+
+        val smonth = if (month > 9) {
+            month.toString()
         } else {
-            smonth = "0" + month.toString()
+            "0" + month.toString()
         }
         val judgeByDayDao = DButil.daosession.judgeByDayDao
         val loadAll = judgeByDayDao.loadAll()
         loadAll.filter {
             it.data.startsWith("" + year + smonth)
-
         }.filter {
             it.isFinish
         }.forEach {
@@ -137,23 +109,19 @@ class CalanderActivity : AppCompatActivity(), CalendarView.OnDateSelectedListene
         tv_year.text = calendar.year.toString()
         tv_lunar.text = calendar.lunar
         mYear = calendar.year
-        val smonth: String
-        if (calendar.month > 9) {
-            smonth = calendar.month.toString()
+        val smonth: String = if (calendar.month > 9) {
+            calendar.month.toString()
         } else {
-            smonth = "0" + calendar.month.toString()
+            "0" + calendar.month.toString()
         }
-        val sday: String
-        if (calendar.day > 9) {
-            sday = calendar.day.toString()
+        val sday: String = if (calendar.day > 9) {
+            calendar.day.toString()
         } else {
-            sday = "0" + calendar.day.toString()
+            "0" + calendar.day.toString()
         }
 
         val data = calendar.year.toString() + smonth + sday
-
         taskList = DButil.daosession.taskDao.queryBuilder().where(TaskDao.Properties.Data.eq(data)).list() as ArrayList<Task>
-
         taskList.sortBy { it.classify }
         bindingAdapter.dates = taskList
         defaultClassify = ""

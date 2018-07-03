@@ -21,7 +21,7 @@ import java.util.List;
 
 public  class BindingAdapter<T> extends RecyclerView.Adapter<BindingHolder> {
     private  int variableId;
-    private List<T> dates;
+    protected List<T> dates;
     private final int layout;
     private ItemClickListener mItemClickListener;
     private ItemLongClickListener itemLongCLickListener;

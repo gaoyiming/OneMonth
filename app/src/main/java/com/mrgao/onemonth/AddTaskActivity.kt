@@ -288,7 +288,7 @@ class AddTaskActivity : AppCompatActivity() {
     /**
      * 日期选择器对话框监听
      */
-    private val onDateSetListener = DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+    private val onDateSetListener = DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
 
         val days: String
         if (monthOfYear + 1 < 10) {
