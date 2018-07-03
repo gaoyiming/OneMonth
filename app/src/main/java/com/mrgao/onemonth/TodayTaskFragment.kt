@@ -86,7 +86,10 @@ class TodayTaskFragment : BaseDatabindingFragment<FragmentTodayTaskBinding>() {
         val task = taskList[position]
         taskDao.delete(task)
         checkIsFinish(taskDao, task.data, task.classify)
+
         checkGroup(taskDao, task)
+
+
 
         RxBus.instance.post("TODAYTASK_REFRESH")
 
