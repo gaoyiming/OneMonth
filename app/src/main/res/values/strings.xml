@@ -30,4 +30,6 @@
     <string name="username">账号</string>
     <string name="enterpwd">请输入您的密码</string>
     <string name="login">登录</string>
+    <string name="copy_to_clip">复制到剪切板</string>
+    <string name="orc">文字识别</string>
 </resources>

@@ -99,6 +99,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             "TODAY_TASK" -> databindingFragment = TodayTaskFragment()
             "FINISHED_TASK" -> databindingFragment = TaskGroupFragment()
             "DELAY_TASK" -> databindingFragment = DelayTaskMvpFragment()
+            "CUSTOM" -> databindingFragment = CustomMvpFragment()
         }
         return databindingFragment
     }
@@ -122,7 +123,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 showFragment("DELAY_TASK")
             }
             R.id.setting -> {
-
+                showFragment("CUSTOM")
             }
             R.id.nav_share -> {
 
@@ -131,7 +132,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
             }
             R.id.custom -> {
-
+                showFragment("CUSTOM")
             }
         }
 

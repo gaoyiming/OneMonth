@@ -2,25 +2,24 @@ package com.mrgao.onemonth
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.View
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.mrgao.onemonth.base.BaseDatabindingFragment
 import com.mrgao.onemonth.base.BindingAdapter
 import com.mrgao.onemonth.base.BindingHolder
 import com.mrgao.onemonth.bean.Task
 import com.mrgao.onemonth.databinding.FragmentTodayTaskBinding
 import com.mrgao.onemonth.databinding.ItemTaskBinding
-import com.mrgao.onemonth.databinding.ItemTaskLeftBinding
-import com.mrgao.onemonth.databinding.ItemTaskReghtBinding
 import com.mrgao.onemonth.model.DButil
 import com.mrgao.onemonth.model.DButil.checkIsFinish
 import com.mrgao.onemonth.rx.RxBus
 import com.onemonth.dao.TaskDao
 import com.onemonth.dao.TaskGroupDao
 import kotlinx.android.synthetic.main.fragment_today_task.*
-import org.jetbrains.anko.support.v4.startActivity
 import java.text.SimpleDateFormat
 import java.util.*
+import org.jetbrains.anko.startActivity
+import org.jetbrains.anko.support.v4.startActivity
 
 
 class TodayTaskFragment : BaseDatabindingFragment<FragmentTodayTaskBinding>() {
@@ -61,7 +60,7 @@ class TodayTaskFragment : BaseDatabindingFragment<FragmentTodayTaskBinding>() {
                 super.convert(holder, position, t)
                 val binding = holder!!.binding as ItemTaskBinding
                 val taskDao = DButil.daosession.taskDao
-                val itemTaskLeftBinding = binding.smMenuViewLeft as ItemTaskLeftBinding
+                val itemTaskLeftBinding = binding.smMenuViewLeft
                 itemTaskLeftBinding.left.setOnClickListener {
                     startActivity<SmileActivity>("id" to taskList[position].id)
                     binding.sml.scrollX = 0
@@ -70,7 +69,7 @@ class TodayTaskFragment : BaseDatabindingFragment<FragmentTodayTaskBinding>() {
                     binding.title.visibility = View.VISIBLE
                 }
                 defaultClassify = taskList[position].classify
-                val itemTaskReghtBinding = binding.smMenuViewRight as ItemTaskReghtBinding
+                val itemTaskReghtBinding = binding.smMenuViewRight
                 itemTaskReghtBinding.right.setOnClickListener {
                     binding.sml.scrollX = 0
                     deleteTask(taskDao, position)
@@ -86,11 +85,7 @@ class TodayTaskFragment : BaseDatabindingFragment<FragmentTodayTaskBinding>() {
         val task = taskList[position]
         taskDao.delete(task)
         checkIsFinish(taskDao, task.data, task.classify)
-
         checkGroup(taskDao, task)
-
-
-
         RxBus.instance.post("TODAYTASK_REFRESH")
 
     }

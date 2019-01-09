@@ -94,7 +94,9 @@
             <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
             <!-- </intent-filter> -->
         </activity>
-        <activity android:name=".view.OcrActivity"></activity>
+        <activity android:name=".view.OcrActivity" />
+        <activity android:name=".view.TakePicActivity" />
+        <activity android:name=".ResultActivity"></activity>
     </application>
 
 </manifest>
