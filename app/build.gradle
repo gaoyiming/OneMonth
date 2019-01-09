@@ -5,14 +5,14 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 28
     defaultConfig {
         applicationId "onemonth.mrgao.com.onemonth"
-        minSdkVersion 19
-        targetSdkVersion 27
+        minSdkVersion 21
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
@@ -44,37 +44,43 @@ kapt {
     generateStubs = true
 }
 dependencies {
-
+    implementation 'com.allenliu.versionchecklib:library:2.1.1'
     implementation 'com.tubb.smrv:swipemenu-recyclerview:5.4.7'
     implementation 'com.moxun:tagcloudlib:1.2.0'
-    implementation 'com.android.support:cardview-v7:27.1.1'
+    implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'com.github.sd6352051:NiftyDialogEffects:v1.0.3'
     implementation 'com.azhon:suspension-fab:1.1.0'
     implementation 'com.orhanobut:dialogplus:1.11@aar'
     implementation 'com.yarolegovich:lovely-dialog:1.1.0'
-    kapt "com.android.databinding:compiler:3.1.3"
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'com.android.support:appcompat-v7:27.1.1'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
-    implementation 'com.android.support:design:27.1.1'
-    implementation 'com.android.support:support-v4:27.1.1'
+    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha2'
+    implementation 'com.google.android.material:material:1.0.0'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'org.greenrobot:greendao:3.2.2'
-    implementation "org.jetbrains.anko:anko:$anko_version"
+    implementation "org.jetbrains.anko:anko:0.10.4"
     // add library
-    implementation 'com.android.support:multidex:1.0.3'
+    implementation 'androidx.multidex:multidex:2.0.0'
     implementation 'org.greenrobot:greendao-generator:3.2.2'
     implementation 'io.reactivex.rxjava2:rxkotlin:2.2.0'
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
     implementation 'com.haibin:calendarview:3.3.4'
+    api 'com.squareup.retrofit2:retrofit:2.3.0'
+    api 'com.squareup.retrofit2:retrofit-adapters:2.3.0'
+    api 'com.squareup.okhttp3:okhttp:3.10.0'
+    api 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
+    api 'com.google.code.gson:gson:2.8.2'
+    api 'com.github.bumptech.glide:glide:4.5.0'
+
+    //支持victor
+    //    compile 'com.github.VictorAlbertos.Jolyglot:gson:0.0.3'
+    api 'com.squareup.retrofit2:converter-gson:2.3.0'
+
+
 }
-configurations.all {
-    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
-        def requested = details.requested
-        if (requested.group == 'com.android.support') {
-            if (!requested.name.startsWith("multidex")) {
-                details.useVersion '27.1.1'
-            }
-        }
+kotlin {
+    experimental {
+        coroutines "enable"
     }
 }

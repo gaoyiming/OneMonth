@@ -1,7 +1,7 @@
 package com.mrgao.onemonth.base;
 
-import android.databinding.ViewDataBinding;
-import android.support.v7.widget.RecyclerView;
+import androidx.databinding.ViewDataBinding;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Created by mr.gao on 2017/5/4.

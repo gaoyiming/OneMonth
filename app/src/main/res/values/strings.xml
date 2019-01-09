@@ -27,4 +27,7 @@
     <string name="task_days">任务总天数：</string>
     <string name="finish_days">   ，打卡天数：</string>
     <string name="target_days">   ，目标天数：</string>
+    <string name="username">账号</string>
+    <string name="enterpwd">请输入您的密码</string>
+    <string name="login">登录</string>
 </resources>

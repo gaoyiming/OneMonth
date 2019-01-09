@@ -1,14 +1,24 @@
 package com.mrgao.onemonth
 
 import android.os.Bundle
-import android.support.design.widget.NavigationView
-import android.support.v4.app.Fragment
-import android.support.v4.view.GravityCompat
-import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.GravityCompat
+import androidx.fragment.app.Fragment
+import com.allenliu.versionchecklib.v2.AllenVersionChecker
+import com.allenliu.versionchecklib.v2.builder.UIData
+import com.google.android.material.navigation.NavigationView
+import com.mrgao.onemonth.base.BaseBean
+import com.mrgao.onemonth.bean.Version
+import com.mrgao.onemonth.net.APIUtil
+import com.mrgao.onemonth.net.Api
+import com.mrgao.onemonth.utils.AppVersionUtil
+import com.mrgao.onemonth.utils.RxUtil
+import com.mrgao.onemonth.view.ProgressSubscriber
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import org.jetbrains.anko.startActivity
+import org.jetbrains.anko.toast
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -17,6 +27,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        checkUpdate()
+
         fab.setOnClickListener {
             startActivity<AddTaskActivity>()
         }
@@ -28,12 +40,41 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     }
 
+    private fun checkUpdate() {
+        val map = HashMap<String, String>()
+        val versionCode = AppVersionUtil.getVersionCode(this)
+        map["versionCode"] = versionCode.toString()
+        APIUtil.createApi(Api::class.java).checkUpdate(map)
+                .compose(RxUtil.rxSchedulerHelper<BaseBean<Version>>())
+                .subscribe(object : ProgressSubscriber<BaseBean<Version>>(this, false) {
+                    override fun onNext(version: BaseBean<Version>) {
+                        if (version.code == 200) {
+                            val versionData = version.data
+                            downLoadApk(versionData)
+                        } else {
+                            toast(version.message)
+                        }
+                    }
+                })
+    }
+
+    private fun downLoadApk(versionData: Version?) {
+
+
+        AllenVersionChecker.getInstance()
+                .downloadOnly(UIData.create().setDownloadUrl(versionData?.url)
+                        .setContent(versionData?.describe)
+                        .setTitle(versionData?.title)
+                ).executeMission(this)
+
+    }
+
     private fun showFragment(Tag: String) {
 
         val fragments = supportFragmentManager.fragments
         val fragmentTransaction = supportFragmentManager.beginTransaction()
         var fragment: Fragment? = supportFragmentManager.findFragmentByTag(Tag)
-        if (fragments != null && fragments.size > 0) {
+        if (fragments.size > 0) {
             for (frag_ment in fragments) {
                 if (frag_ment != null) {
                     fragmentTransaction.hide(frag_ment)
@@ -42,7 +83,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
         if (fragment == null) {
             fragment = fragmentBuilder(Tag)
-            fragmentTransaction.add(R.id.container, fragment, Tag)
+            if (fragment != null) {
+                fragmentTransaction.add(R.id.container, fragment, Tag)
+            }
             fragmentTransaction.commitAllowingStateLoss()
             return
         }

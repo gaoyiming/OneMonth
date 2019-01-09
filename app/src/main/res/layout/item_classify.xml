@@ -8,12 +8,12 @@
             type="com.mrgao.onemonth.bean.Classify" />
     </data>
 
-    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp">
 
-        <android.support.v7.widget.CardView
+        <androidx.cardview.widget.CardView
             contentPadding="5dp"
             android:layout_width="match_parent"
 
@@ -32,6 +32,6 @@
                 android:text="@{classify.classify}"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_big" />
-        </android.support.v7.widget.CardView>
-    </android.support.constraint.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

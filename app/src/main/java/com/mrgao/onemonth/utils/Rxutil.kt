@@ -19,12 +19,15 @@ object RxUtil {
      * @return
     </T> */
 
-//    fun <T> rxSchedulerHelper(): ObservableTransformer<T, T> {
-//        return  subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//
-//
-//    }
+    fun <T> rxSchedulerHelper(): ObservableTransformer<T, T> {
+        return ObservableTransformer { upstream ->
+            upstream.subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+        }
+    }
+
+
+
 
 
 }

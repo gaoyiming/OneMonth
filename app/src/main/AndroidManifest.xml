@@ -2,6 +2,61 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.mrgao.onemonth">
 
+    <!-- Required  一些系统要求的权限，如访问网络等 -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <!-- <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" /> -->
+
+
+    <!-- <uses-permission android:name="android.permission.WAKE_LOCK" /> -->
+    <!-- 内存卡 -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!-- 开机自动允许	允许程序开机自动运行 -->
+    <!-- <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" /> -->
+    <!-- 粘性广播 -->
+    <!-- <uses-permission android:name="android.permission.BROADCAST_STICKY" /> -->
+    <!-- 使用振动	允许振动 -->
+    <!-- <uses-permission android:name="android.permission.VIBRATE" /> -->
+    <!-- 下载权限 -->
+    <uses-permission android:name="android.permission.ACCESS_DOWNLOAD_MANAGER" />
+    <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
+    <!-- 禁用键盘锁	允许程序禁用键盘锁 -->
+    <!-- <uses-permission android:name="android.permission.DISABLE_KEYGUARD" /> -->
+    <!-- 挂载sd卡 -->
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- 获取任务信息	允许程序获取当前或最近运行的应用 -->
+    <!-- <uses-permission android:name="android.permission.GET_TASKS" /> -->
+
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <!-- map -->
+    <!-- 用于进行网络定位 -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <!-- 用于访问GPS定位 -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <!-- 用于获取运营商信息，用于支持提供运营商信息相关的接口 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- 用于访问wifi网络信息，wifi信息会用于进行网络定位 -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <!-- 用于获取wifi的获取权限，wifi信息会用来进行网络定位 -->
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <!-- 用于访问网络，网络定位需要上网 -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- 用于读取手机当前的状态 -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <!-- 用于写入缓存数据到扩展存储卡 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!-- 用于申请调用A-GPS模块 -->
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
+    <!-- 用于申请获取蓝牙信息进行室内定位 -->
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+
     <application
         android:name=".base.BaseApplication"
         android:allowBackup="true"
@@ -21,7 +76,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".ClassifyActivity" />
-        <activity android:name=".AddTaskActivity"
+        <activity
+            android:name=".AddTaskActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".SmileActivity"
@@ -29,6 +85,16 @@
         <activity
             android:name=".CalanderActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".view.LoginActivity">
+
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+
+
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
+        </activity>
+        <activity android:name=".view.OcrActivity"></activity>
     </application>
 
 </manifest>

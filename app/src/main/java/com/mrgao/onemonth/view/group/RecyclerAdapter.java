@@ -1,7 +1,7 @@
 package com.mrgao.onemonth.view.group;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,9 +9,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mrgao.onemonth.R;
-import com.mrgao.onemonth.model.DButil;
-import com.onemonth.dao.DaoSession;
-import com.onemonth.dao.TaskDao;
 import com.tubb.smrv.SwipeHorizontalMenuLayout;
 
 import java.util.ArrayList;

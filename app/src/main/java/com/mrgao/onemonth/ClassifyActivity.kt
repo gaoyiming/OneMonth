@@ -1,8 +1,8 @@
 package com.mrgao.onemonth
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.mrgao.onemonth.base.BindingAdapter
 import com.mrgao.onemonth.bean.Classify
 import com.mrgao.onemonth.model.DButil

@@ -1,7 +1,7 @@
 package com.mrgao.onemonth.base;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 /**
  * Created by mr.gao on 2017/3/29.

@@ -3,11 +3,12 @@ package com.mrgao.onemonth
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
 import android.view.KeyEvent
+import com.mrgao.onemonth.R.id.circle
 import com.mrgao.onemonth.adapter.TextTagsAdapter
 import com.mrgao.onemonth.bean.Classify
 import com.mrgao.onemonth.bean.Task

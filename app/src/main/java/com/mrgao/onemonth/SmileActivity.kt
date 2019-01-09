@@ -1,7 +1,7 @@
 package com.mrgao.onemonth
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import com.mrgao.onemonth.model.DButil
 import com.mrgao.onemonth.model.DButil.checkIsFinish
 import com.mrgao.onemonth.rx.RxBus
