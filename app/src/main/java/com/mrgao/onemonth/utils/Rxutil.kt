@@ -1,8 +1,10 @@
 package com.mrgao.onemonth.utils
 
+import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import java.util.concurrent.TimeUnit
 
 /**
  * 文 件 名: Rxutil
@@ -26,7 +28,17 @@ object RxUtil {
         }
     }
 
+    fun countdown(time: Int, dealy: Int): Observable<Long>? {
+        var time = time
+        if (time < 0) time = 0
 
+        val countTime = time
+        return Observable.interval(0, dealy.toLong(), TimeUnit.SECONDS)
+                .compose(RxUtil.rxSchedulerHelper())
+                .map<Long> { increaseTime -> countTime - increaseTime }
+                .take((countTime + 1).toLong())
+
+    }
 
 
 

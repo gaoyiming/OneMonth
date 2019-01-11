@@ -89,7 +89,9 @@
         <activity android:name=".view.OcrActivity" />
         <activity android:name=".TakePicActivity" />
         <activity android:name=".ResultActivity" />
-        <activity android:name=".SplashActivity">
+        <activity
+            android:name=".SplashActivity"
+            android:theme="@style/Loading">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
