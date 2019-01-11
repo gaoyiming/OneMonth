@@ -10,6 +10,26 @@
 
 
     <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/et_password_repeat"
+        android:layout_width="359dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="26dp"
+
+        android:layout_marginTop="42dp"
+        android:layout_marginEnd="26dp"
+        android:background="@drawable/rectbox"
+        android:backgroundTint="@color/white"
+        android:hint="@string/enterpwd"
+        android:paddingStart="20dp"
+        android:textColor="@color/main_color"
+        android:textColorHint="@color/main_color"
+        android:textSize="@dimen/text_commen"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_password" />
+
+    <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/et_username"
         android:layout_width="359dp"
         android:layout_height="50dp"
@@ -27,7 +47,8 @@
         app:layout_constraintBottom_toTopOf="@+id/et_password"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="spread_inside" />
 
 
     <com.google.android.material.textfield.TextInputEditText
@@ -35,8 +56,7 @@
         android:layout_width="359dp"
         android:layout_height="50dp"
         android:layout_marginStart="26dp"
-        android:layout_marginTop="64dp"
-
+        android:layout_marginTop="42dp"
         android:layout_marginEnd="26dp"
         android:background="@drawable/rectbox"
         android:backgroundTint="@color/white"
@@ -51,32 +71,20 @@
 
 
     <TextView
-        android:id="@+id/login"
+        android:id="@+id/register"
         android:layout_width="359dp"
         android:layout_height="50dp"
         android:layout_marginStart="26dp"
-        android:layout_marginTop="131dp"
         android:layout_marginEnd="26dp"
         android:layout_marginBottom="182dp"
         android:background="@drawable/rectbox"
         android:backgroundTint="@color/main_color"
         android:gravity="center"
-        android:text="@string/login"
+        android:text="@string/register"
         android:textColor="@color/white"
         android:textSize="@dimen/text_big"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/register" />
+        app:layout_constraintStart_toStartOf="parent" />
 
-    <TextView
-        android:id="@+id/register"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="34dp"
-        android:layout_marginEnd="32dp"
-        android:text="@string/register_acount"
-        android:textColor="@color/main_color"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_password" />
 </androidx.constraintlayout.widget.ConstraintLayout>

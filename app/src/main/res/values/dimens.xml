@@ -12,6 +12,7 @@
     <dimen name="text_commen">16sp</dimen>
     <dimen name="text_big">18sp</dimen>
     <dimen name="text_huge">22sp</dimen>
+    <dimen name="text_splash">52sp</dimen>
 
 
 </resources>

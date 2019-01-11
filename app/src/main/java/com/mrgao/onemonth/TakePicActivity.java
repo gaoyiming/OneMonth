@@ -1,4 +1,4 @@
-package com.mrgao.onemonth.view;
+package com.mrgao.onemonth;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -10,6 +10,7 @@ import android.view.View;
 import com.mrgao.onemonth.R;
 import com.mrgao.onemonth.ResultActivity;
 import com.mrgao.onemonth.helper.CustomHelper;
+import com.mrgao.onemonth.view.OcrActivity;
 
 import org.devio.takephoto.app.TakePhotoActivity;
 import org.devio.takephoto.model.TImage;

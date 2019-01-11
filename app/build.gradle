@@ -7,11 +7,11 @@ apply plugin: 'kotlin-android-extensions'
 android {
     compileSdkVersion 28
     defaultConfig {
-        applicationId "com.mrgao.onemonth"
+        applicationId "com.mrgao.onemonth1"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "2.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -64,7 +64,8 @@ dependencies {
     implementation "org.jetbrains.anko:anko-commons:$anko_version"
 
     // Anko Layouts
-    implementation "org.jetbrains.anko:anko-sdk25:$anko_version" // sdk15, sdk19, sdk21, sdk23 are also available
+    implementation "org.jetbrains.anko:anko-sdk25:$anko_version"
+    // sdk15, sdk19, sdk21, sdk23 are also available
     implementation "org.jetbrains.anko:anko-appcompat-v7:$anko_version"
 
     // Coroutine listeners for Anko Layouts
@@ -80,7 +81,7 @@ dependencies {
     api 'com.squareup.okhttp3:okhttp:3.10.0'
     api 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
     api 'com.google.code.gson:gson:2.8.2'
-    api 'com.github.bumptech.glide:glide:4.5.0'
+    api 'com.github.bumptech.glide:glide:4.6.1'
     //支持victor
     //    compile 'com.github.VictorAlbertos.Jolyglot:gson:0.0.3'
     api 'com.squareup.retrofit2:converter-gson:2.3.0'

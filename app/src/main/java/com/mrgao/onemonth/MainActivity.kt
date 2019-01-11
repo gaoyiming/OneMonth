@@ -18,7 +18,6 @@ import com.mrgao.onemonth.view.ProgressSubscriber
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import org.jetbrains.anko.startActivity
-import org.jetbrains.anko.toast
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -52,7 +51,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                             val versionData = version.data
                             downLoadApk(versionData)
                         } else {
-                            toast(version.message)
+//                            toast(version.message)
                         }
                     }
                 })
