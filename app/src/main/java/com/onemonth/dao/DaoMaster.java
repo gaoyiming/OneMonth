@@ -21,7 +21,6 @@ public class DaoMaster extends AbstractDaoMaster {
 
     /** Creates underlying database table using DAOs. */
     public static void createAllTables(Database db, boolean ifNotExists) {
-        ClassifyDao.createTable(db, ifNotExists);
         JudgeByDayDao.createTable(db, ifNotExists);
         TaskDao.createTable(db, ifNotExists);
         TaskGroupDao.createTable(db, ifNotExists);
@@ -30,7 +29,6 @@ public class DaoMaster extends AbstractDaoMaster {
 
     /** Drops underlying database table using DAOs. */
     public static void dropAllTables(Database db, boolean ifExists) {
-        ClassifyDao.dropTable(db, ifExists);
         JudgeByDayDao.dropTable(db, ifExists);
         TaskDao.dropTable(db, ifExists);
         TaskGroupDao.dropTable(db, ifExists);
@@ -53,7 +51,6 @@ public class DaoMaster extends AbstractDaoMaster {
 
     public DaoMaster(Database db) {
         super(db, SCHEMA_VERSION);
-        registerDaoClass(ClassifyDao.class);
         registerDaoClass(JudgeByDayDao.class);
         registerDaoClass(TaskDao.class);
         registerDaoClass(TaskGroupDao.class);

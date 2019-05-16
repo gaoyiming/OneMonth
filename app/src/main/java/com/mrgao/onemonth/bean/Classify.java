@@ -1,11 +1,5 @@
 package com.mrgao.onemonth.bean;
 
-import com.moxun.tagcloudlib.view.TagsAdapter;
-
-import org.greenrobot.greendao.annotation.Entity;
-import org.greenrobot.greendao.annotation.Generated;
-import org.greenrobot.greendao.annotation.Id;
-
 /**
  * 文 件 名: Classify
  * 创 建 人: mr.gao
@@ -13,20 +7,24 @@ import org.greenrobot.greendao.annotation.Id;
  * 邮   箱: coder.mrgao@gmail.com
  * 修改时间：
  * 描述：
+ * @author mr.gao
  */
-@Entity
+
 public class Classify {
-    @Id(autoincrement = true)
+
     private Long id;
     private String classify;
+    private String _id;
+    private String username;
+    private int isDelete;
 
-    @Generated(hash = 1502225527)
+
     public Classify(Long id, String classify) {
         this.id = id;
         this.classify = classify;
     }
 
-    @Generated(hash = 767880343)
+
     public Classify() {
     }
 
@@ -44,5 +42,29 @@ public class Classify {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String get_id() {
+        return _id;
+    }
+
+    public void set_id(String _id) {
+        this._id = _id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public int getIsDelete() {
+        return isDelete;
+    }
+
+    public void setIsDelete(int isDelete) {
+        this.isDelete = isDelete;
     }
 }

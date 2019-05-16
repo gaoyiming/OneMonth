@@ -3,22 +3,24 @@ package com.mrgao.onemonth
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
 import android.view.KeyEvent
-import com.mrgao.onemonth.R.id.circle
+import androidx.appcompat.app.AppCompatActivity
 import com.mrgao.onemonth.adapter.TextTagsAdapter
+import com.mrgao.onemonth.base.BaseBean
+import com.mrgao.onemonth.bean.BaseBeanL
 import com.mrgao.onemonth.bean.Classify
-import com.mrgao.onemonth.bean.Task
-import com.mrgao.onemonth.bean.TaskGroup
-import com.mrgao.onemonth.model.DButil
+import com.mrgao.onemonth.bean.P
+import com.mrgao.onemonth.net.APIUtil.createApi
+import com.mrgao.onemonth.net.Api
 import com.mrgao.onemonth.rx.RxBus
+import com.mrgao.onemonth.utils.PreferencesUtil
+import com.mrgao.onemonth.utils.RxUtil
+import com.mrgao.onemonth.view.ProgressSubscriber
 import com.mrgao.onemonth.view.flowlayout.FlowTagLayout
 import com.mrgao.onemonth.view.flowlayout.TagAdapter
-import com.onemonth.dao.*
-import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_add_task.*
@@ -29,9 +31,6 @@ import java.util.*
 
 
 class AddTaskActivity : AppCompatActivity() {
-    private lateinit var classifyDao: ClassifyDao
-    private lateinit var taskGroupDao: TaskGroupDao
-    private lateinit var taskDao: TaskDao
     private lateinit var classifyLists: ArrayList<Classify>
     private lateinit var tagsAdapter: TextTagsAdapter
     private lateinit var flowTagsAdapter: TagAdapter
@@ -45,10 +44,12 @@ class AddTaskActivity : AppCompatActivity() {
     private var classifyContent = ""
     private val date = Date()
     private var circleNum = 1
+    private lateinit var username: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_task)
+        username = PreferencesUtil.getValue("username", "").toString()
 
 
 
@@ -97,7 +98,7 @@ class AddTaskActivity : AppCompatActivity() {
         flowTagsAdapter.clearAndAddAll(cycleLists)
         getClassify()
 
-        RxBus.instance.register(String::class.java).subscribe { s ->
+        var bus = RxBus.instance.register(String::class.java).subscribe { s ->
             run {
                 if ("CLASSIFY_REFRESH" == s) {
                     getClassify()
@@ -119,7 +120,7 @@ class AddTaskActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            addToDb()
+            addTask()
         }
 
         targetNum.addTextChangedListener(object : TextWatcher {
@@ -178,93 +179,120 @@ class AddTaskActivity : AppCompatActivity() {
     }
 
     private fun getClassify() {
-        classifyDao = DButil.daosession.classifyDao
-        taskDao = DButil.daosession.taskDao
-        taskGroupDao = DButil.daosession.taskGroupDao
-        classifyLists = classifyDao.loadAll() as ArrayList<Classify>
-        lists.clear()
-        for (classify in classifyLists) {
-            lists.add(classify.classify)
-        }
-        tagsAdapter = object : TextTagsAdapter(lists) {
-            override fun getCheckContent(content: String) {
-                classify.text = content
-                classifyContent = content
-            }
-        }
-        tagView.setAdapter(tagsAdapter)
+        val map = HashMap<String, String>()
+        map["username"] = username
+        createApi(Api::class.java)
+                .getTaskType(map)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(object : ProgressSubscriber<BaseBeanL<Classify>>(this, false) {
+                    override fun onNext(t: BaseBeanL<Classify>) {
+                        classifyLists = t.data as ArrayList<Classify>
+                        lists.clear()
+                        for (classify in classifyLists) {
+                            lists.add(classify.classify)
+                        }
+                        tagsAdapter = object : TextTagsAdapter(lists) {
+                            override fun getCheckContent(content: String) {
+                                classify.text = content
+                                classifyContent = content
+                            }
+                        }
+                        tagView.setAdapter(tagsAdapter)
+                    }
+                })
     }
 
     @SuppressLint("SimpleDateFormat")
-    private fun addToDb() {
-
-        val sdf = SimpleDateFormat("yyyyMMdd")
-        val dateNowStr = sdf.format(date)
-
-        var insert = 0L
-
-        val currentTimeMillis = System.currentTimeMillis()
-        circleNum -= 1
-        Observable.fromIterable(0..circleNum).flatMap {
-
-
-            calender.time = date
-            calender.add(Calendar.DATE, it)
-            var endDate = calender.time
-            val format = SimpleDateFormat("yyyyMMdd")
-            val dateFormat = format.format(endDate)
-            val task = Task()
-            task.content = content.text.toString()
-            task.classify = classify.text.toString()
-            task.data = dateFormat
-            task.createTime = currentTimeMillis
-            insert = taskDao.insert(task)
-
-            if(it==0){
-                val judgeByDayDao = DButil.daosession.judgeByDayDao
-                val unique = judgeByDayDao.queryBuilder().where(JudgeByDayDao.Properties.Data.eq(dateFormat)).unique()
-                if (unique != null) {
-                    unique.isFinish = false
-                    judgeByDayDao.update(unique)
-                }
-                val judgeByGroupDao = DButil.daosession.judgeByGroupDao
-                val judgeByGroup = judgeByGroupDao.queryBuilder()
-                        .where(JudgeByGroupDao.Properties.Data.eq(dateFormat), JudgeByGroupDao.Properties.Classify.eq(classify)).unique()
-                if (judgeByGroup != null) {
-                    judgeByGroup.isFinish = false
-
-                    judgeByGroupDao.update(judgeByGroup)
-                }
-            }
-            if (it == circleNum) {
-                val taskGroup = TaskGroup()
-
-                val format = SimpleDateFormat("yyyy-MM-dd")
-                val sdateFormat = format.format(date)
-                taskGroup.createTimeS = sdateFormat
-                calender.time = date
-                calender.add(Calendar.DATE, circleNum)
-                endDate = calender.time
-                taskGroup.content = content.text.toString()
-                taskGroup.classify = classify.text.toString()
-                taskGroup.targetNum = targetNum.text.toString().toInt()
-                val dateFormatEnd = format.format(endDate)
-                taskGroup.endTimeS = dateFormatEnd
-                taskGroup.createTime = currentTimeMillis
-                taskGroup.dayNum = circleNum + 1
-                taskGroupDao.insert(taskGroup)
-
-            }
-            Observable.just(dateNowStr)
-
-        }.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    if (insert > 0) {
+    private fun addTask() {
+        circleNum--
+        val map = HashMap<String, String>()
+        map["username"] = username
+        map["classify"] = classify.text.toString()
+        map["taskName"] = content.text.toString()
+        map["targetDays"] = targetNum.text.toString()
+        val format = SimpleDateFormat("yyyyMMdd")
+        map["startDate"] = format.format(date)
+        calender.time = date
+        calender.add(Calendar.DATE, circleNum)
+        val endDate = calender.time
+        map["endDate"] = format.format(endDate)
+        circleNum++
+        map["totalDays"] = circleNum.toString()
+        createApi(Api::class.java)
+                .addTask(map)
+                .compose(RxUtil.rxSchedulerHelper<BaseBean<P>>())
+                .subscribe(object : ProgressSubscriber<BaseBean<P>>(this, false) {
+                    override fun onNext(next: BaseBean<P>) {
                         RxBus.instance.post("TODAYTASK_REFRESH")
-                        finish()
                     }
-                }
+                })
+//        val task = Task()
+//        task.content = content.text.toString()
+//        task.classify = classify.text.toString()
+//        task.data = dateFormat
+//        task.createTime = currentTimeMillis
+//        circleNum -= 1
+//        Observable.fromIterable(0..circleNum).flatMap {
+//
+//
+//            calender.time = date
+//            calender.add(Calendar.DATE, it)
+//            var endDate = calender.time
+//            val format = SimpleDateFormat("yyyyMMdd")
+//            val dateFormat = format.format(endDate)
+//            val task = Task()
+//            task.content = content.text.toString()
+//            task.classify = classify.text.toString()
+//            task.data = dateFormat
+//            task.createTime = currentTimeMillis
+//            insert = taskDao.insert(task)
+//
+//            if(it==0){
+//                val judgeByDayDao = DButil.daosession.judgeByDayDao
+//                val unique = judgeByDayDao.queryBuilder().where(JudgeByDayDao.Properties.Data.eq(dateFormat)).unique()
+//                if (unique != null) {
+//                    unique.isFinish = false
+//                    judgeByDayDao.update(unique)
+//                }
+//                val judgeByGroupDao = DButil.daosession.judgeByGroupDao
+//                val judgeByGroup = judgeByGroupDao.queryBuilder()
+//                        .where(JudgeByGroupDao.Properties.Data.eq(dateFormat), JudgeByGroupDao.Properties.Classify.eq(classify)).unique()
+//                if (judgeByGroup != null) {
+//                    judgeByGroup.isFinish = false
+//
+//                    judgeByGroupDao.update(judgeByGroup)
+//                }
+//            }
+//            if (it == circleNum) {
+//                val taskGroup = TaskGroup()
+//
+//                val format = SimpleDateFormat("yyyy-MM-dd")
+//                val sdateFormat = format.format(date)
+//                taskGroup.createTimeS = sdateFormat
+//                calender.time = date
+//                calender.add(Calendar.DATE, circleNum)
+//                endDate = calender.time
+//                taskGroup.content = content.text.toString()
+//                taskGroup.classify = classify.text.toString()
+//                taskGroup.targetNum = targetNum.text.toString().toInt()
+//                val dateFormatEnd = format.format(endDate)
+//                taskGroup.endTimeS = dateFormatEnd
+//                taskGroup.createTime = currentTimeMillis
+//                taskGroup.dayNum = circleNum + 1
+//                taskGroupDao.insert(taskGroup)
+//
+//            }
+//            Observable.just(dateNowStr)
+//
+//        }.subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe {
+//                    if (insert > 0) {
+//                        RxBus.instance.post("TODAYTASK_REFRESH")
+//                        finish()
+//                    }
+//                }
 
 
     }

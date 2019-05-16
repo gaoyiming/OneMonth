@@ -2,7 +2,7 @@ package com.mrgao.onemonth.view
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.mrgao.onemonth.MainActivity
+import com.mrgao.onemonth.HomeActivity
 import com.mrgao.onemonth.R
 import com.mrgao.onemonth.RegisterActivity
 import com.mrgao.onemonth.base.BaseBean
@@ -33,7 +33,7 @@ class LoginActivity : AppCompatActivity() {
                             val user = bean.data
                             PreferencesUtil.saveValue("username", user.username)
                             PreferencesUtil.saveValue("password", user.username)
-                            startActivity<MainActivity>()
+                            startActivity<HomeActivity>()
                         }
                     })
         }

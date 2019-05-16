@@ -8,13 +8,11 @@ import org.greenrobot.greendao.database.Database;
 import org.greenrobot.greendao.identityscope.IdentityScopeType;
 import org.greenrobot.greendao.internal.DaoConfig;
 
-import com.mrgao.onemonth.bean.Classify;
 import com.mrgao.onemonth.bean.JudgeByDay;
 import com.mrgao.onemonth.bean.Task;
 import com.mrgao.onemonth.bean.TaskGroup;
 import com.mrgao.onemonth.bean.JudgeByGroup;
 
-import com.onemonth.dao.ClassifyDao;
 import com.onemonth.dao.JudgeByDayDao;
 import com.onemonth.dao.TaskDao;
 import com.onemonth.dao.TaskGroupDao;
@@ -29,13 +27,11 @@ import com.onemonth.dao.JudgeByGroupDao;
  */
 public class DaoSession extends AbstractDaoSession {
 
-    private final DaoConfig classifyDaoConfig;
     private final DaoConfig judgeByDayDaoConfig;
     private final DaoConfig taskDaoConfig;
     private final DaoConfig taskGroupDaoConfig;
     private final DaoConfig judgeByGroupDaoConfig;
 
-    private final ClassifyDao classifyDao;
     private final JudgeByDayDao judgeByDayDao;
     private final TaskDao taskDao;
     private final TaskGroupDao taskGroupDao;
@@ -44,9 +40,6 @@ public class DaoSession extends AbstractDaoSession {
     public DaoSession(Database db, IdentityScopeType type, Map<Class<? extends AbstractDao<?, ?>>, DaoConfig>
             daoConfigMap) {
         super(db);
-
-        classifyDaoConfig = daoConfigMap.get(ClassifyDao.class).clone();
-        classifyDaoConfig.initIdentityScope(type);
 
         judgeByDayDaoConfig = daoConfigMap.get(JudgeByDayDao.class).clone();
         judgeByDayDaoConfig.initIdentityScope(type);
@@ -60,13 +53,11 @@ public class DaoSession extends AbstractDaoSession {
         judgeByGroupDaoConfig = daoConfigMap.get(JudgeByGroupDao.class).clone();
         judgeByGroupDaoConfig.initIdentityScope(type);
 
-        classifyDao = new ClassifyDao(classifyDaoConfig, this);
         judgeByDayDao = new JudgeByDayDao(judgeByDayDaoConfig, this);
         taskDao = new TaskDao(taskDaoConfig, this);
         taskGroupDao = new TaskGroupDao(taskGroupDaoConfig, this);
         judgeByGroupDao = new JudgeByGroupDao(judgeByGroupDaoConfig, this);
 
-        registerDao(Classify.class, classifyDao);
         registerDao(JudgeByDay.class, judgeByDayDao);
         registerDao(Task.class, taskDao);
         registerDao(TaskGroup.class, taskGroupDao);
@@ -74,15 +65,10 @@ public class DaoSession extends AbstractDaoSession {
     }
     
     public void clear() {
-        classifyDaoConfig.clearIdentityScope();
         judgeByDayDaoConfig.clearIdentityScope();
         taskDaoConfig.clearIdentityScope();
         taskGroupDaoConfig.clearIdentityScope();
         judgeByGroupDaoConfig.clearIdentityScope();
-    }
-
-    public ClassifyDao getClassifyDao() {
-        return classifyDao;
     }
 
     public JudgeByDayDao getJudgeByDayDao() {

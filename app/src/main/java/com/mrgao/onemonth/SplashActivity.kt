@@ -19,7 +19,7 @@ class SplashActivity : Activity() {
                 if (username.isEmpty()) {
                     startActivity<LoginActivity>()
                 } else {
-                    startActivity<MainActivity>()
+                    startActivity<HomeActivity>()
                 }
             }
         };

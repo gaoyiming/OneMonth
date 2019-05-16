@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.mrgao.onemonth.base.BaseDatabindingFragment
 import com.mrgao.onemonth.base.BindingAdapter
 import com.mrgao.onemonth.base.BindingHolder
@@ -53,7 +54,7 @@ class TodayTaskFragment : BaseDatabindingFragment<FragmentTodayTaskBinding>() {
     }
 
     override fun initUI(view: View?, savedInstanceState: Bundle?) {
-        recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        recyclerView.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         var defaultClassify = ""
         bindingAdapter = object : BindingAdapter<Task>(taskList, R.layout.item_task, BR.task) {
             override fun convert(holder: BindingHolder<*>?, position: Int, t: Task?) {
